@@ -1,4 +1,4 @@
-package pageswidget
+package leftwidget
 
 import (
 	"image/color"

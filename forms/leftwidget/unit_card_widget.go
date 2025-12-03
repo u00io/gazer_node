@@ -1,14 +1,15 @@
-package pageswidget
+package leftwidget
 
 import (
 	"image/color"
 
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/nui/nuikey"
 	"github.com/u00io/nui/nuimouse"
 	"github.com/u00io/nuiforms/ui"
 )
 
-type PageWidget struct {
+type UnitCardWidget struct {
 	ui.Widget
 	id string
 
@@ -22,8 +23,8 @@ type PageWidget struct {
 	lblUnitId   *ui.Label
 }
 
-func NewPageWidget(categoryName string, categoryDisplayName string, id string) *PageWidget {
-	var c PageWidget
+func NewUnitCardWidget(categoryName string, categoryDisplayName string, id string) *UnitCardWidget {
+	var c UnitCardWidget
 	c.InitWidget()
 
 	c.SetPanelPadding(1)
@@ -43,7 +44,11 @@ func NewPageWidget(categoryName string, categoryDisplayName string, id string) *
 	})
 	c.AddWidgetOnGrid(c.lblCategory, 0, 0)
 
-	unitIdShort := id
+	unitIdShort := ""
+	unit := config.UnitById(id)
+	if unit != nil {
+		unitIdShort = unit.PublicKey
+	}
 	// input: 1234-------3240
 	// format: 0x1234...3240
 	if len(id) == 64 {
@@ -51,7 +56,7 @@ func NewPageWidget(categoryName string, categoryDisplayName string, id string) *
 	}
 
 	c.lblUnitId = ui.NewLabel(unitIdShort)
-	c.lblUnitId.SetForegroundColor(color.RGBA{R: 150, G: 150, B: 150, A: 255})
+	c.lblUnitId.SetForegroundColor(color.RGBA{R: 150, G: 150, B: 250, A: 255})
 	c.lblUnitId.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblUnitId.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
@@ -76,13 +81,13 @@ func NewPageWidget(categoryName string, categoryDisplayName string, id string) *
 	return &c
 }
 
-func (c *PageWidget) Click() {
+func (c *UnitCardWidget) Click() {
 	if c.OnClick != nil {
 		c.OnClick(c.id)
 	}
 }
 
-func (c *PageWidget) SetSelected(selected bool) {
+func (c *UnitCardWidget) SetSelected(selected bool) {
 	c.selected = selected
 	if selected {
 		backColor := c.BackgroundColorAccent2()
@@ -97,9 +102,9 @@ func (c *PageWidget) SetSelected(selected bool) {
 	}
 }
 
-func (c *PageWidget) IsSelected() bool {
+func (c *UnitCardWidget) IsSelected() bool {
 	return c.selected
 }
 
-func (c *PageWidget) UpdateData() {
+func (c *UnitCardWidget) UpdateData() {
 }

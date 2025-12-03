@@ -39,8 +39,41 @@ var Registry UnitsRegistry
 
 func init() {
 	Registry.UnitTypes = make(map[string]*UnitTypeRecord)
-	Registry.RegisterUnitType("unit01filecontent", "File Content", unit01filecontent.New, "File Operations", "Content Management")
-	Registry.RegisterUnitType("unit02currenttime", "Current Time", unit02currenttime.New, "Time Management", "Utilities")
+
+	// General units
+	Registry.RegisterUnitType("unit001demosignal", "Demo Signal", unit01filecontent.New, "General")
+
+	// Computer units
+	Registry.RegisterUnitType("unit101networkadapters", "Network Adapters", unit02currenttime.New, "Computer")
+	Registry.RegisterUnitType("unit102process", "Process", unit02currenttime.New, "Computer")
+	Registry.RegisterUnitType("unit103storage", "Storage", unit02currenttime.New, "Computer")
+	Registry.RegisterUnitType("unit104memory", "Memory", unit02currenttime.New, "Computer")
+
+	// File units
+	Registry.RegisterUnitType("unit201filesize", "File Size", unit02currenttime.New, "Files")
+	Registry.RegisterUnitType("unit202filecontent", "File Content", unit02currenttime.New, "Files")
+	Registry.RegisterUnitType("unit203filetail", "File Tail", unit02currenttime.New, "Files")
+
+	// Serial Port units
+	Registry.RegisterUnitType("unit301serialportkeyvalue", "Serial Port Key=Value", unit02currenttime.New, "SerialPort")
+	Registry.RegisterUnitType("unit302serialportline", "Serial Port Lines", unit02currenttime.New, "SerialPort")
+
+	// HTTP units
+	Registry.RegisterUnitType("unit401httpvalue", "Http Get Value", unit02currenttime.New, "HTTP/Web")
+	Registry.RegisterUnitType("unit402httpjson", "Http Get Json", unit02currenttime.New, "HTTP/Web")
+
+	// Network units
+	Registry.RegisterUnitType("unit501networkping", "Ping", unit02currenttime.New, "Network")
+	Registry.RegisterUnitType("unit502networktcpconnect", "Tcp Connect", unit02currenttime.New, "Network")
+
+	// Raspberry Pi units
+	Registry.RegisterUnitType("unit601raspberrypiTemp", "Temperature", unit02currenttime.New, "Raspberry Pi")
+	Registry.RegisterUnitType("unit602raspberrypiGpioPins", "GPIO Pins", unit02currenttime.New, "Raspberry Pi")
+
+	// Console units
+	Registry.RegisterUnitType("unit701plainvalue", "Plain Value", unit02currenttime.New, "Console")
+	Registry.RegisterUnitType("unit702keyvalue", "Key=Value", unit02currenttime.New, "Console")
+
 	Registry.UpdateUnitCategories()
 }
 

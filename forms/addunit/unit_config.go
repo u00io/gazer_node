@@ -1,4 +1,4 @@
-package addpage
+package addunit
 
 import "github.com/u00io/nuiforms/ui"
 

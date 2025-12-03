@@ -1,4 +1,4 @@
-package addpage
+package addunit
 
 import (
 	"image/color"
@@ -10,20 +10,22 @@ import (
 
 type UnitTypeWidget struct {
 	ui.Widget
-	unitTypeName string
+	unitTypeName        string
+	unitTypeDisplayName string
 
 	OnClick func(clickedItem string)
 
 	selected bool
 }
 
-func NewUnitTypeWidget(unitTypeName string) *UnitTypeWidget {
+func NewUnitTypeWidget(unitTypeName string, unitTypeDisplayName string) *UnitTypeWidget {
 	var c UnitTypeWidget
 	c.InitWidget()
 	c.SetAutoFillBackground(true)
 	c.unitTypeName = unitTypeName
+	c.unitTypeDisplayName = unitTypeDisplayName
 
-	lbl := ui.NewLabel(unitTypeName)
+	lbl := ui.NewLabel(unitTypeDisplayName)
 	lbl.SetMouseCursor(nuimouse.MouseCursorPointer)
 	lbl.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
@@ -35,8 +37,8 @@ func NewUnitTypeWidget(unitTypeName string) *UnitTypeWidget {
 	})
 
 	c.AddWidgetOnGrid(lbl, 0, 0)
-	c.SetMinHeight(200)
-	c.SetMaxHeight(200)
+	c.SetMinHeight(90)
+	c.SetMaxHeight(90)
 	c.SetSelected(false)
 	c.SetMouseCursor(nuimouse.MouseCursorPointer)
 

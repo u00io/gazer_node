@@ -1,11 +1,11 @@
-package pageswidget
+package leftwidget
 
 import (
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
 )
 
-type Pages struct {
+type UnitsCardsWidget struct {
 	ui.Widget
 
 	loadedFirstTime  bool
@@ -19,8 +19,8 @@ type Pages struct {
 	onPageSelected func(tp string, unitId string)
 }
 
-func NewPagesWidget() *Pages {
-	var c Pages
+func NewUnitsCardsWidget() *UnitsCardsWidget {
+	var c UnitsCardsWidget
 	c.InitWidget()
 	c.SetAutoFillBackground(true)
 	c.SetPanelPadding(0)
@@ -39,11 +39,11 @@ func NewPagesWidget() *Pages {
 	return &c
 }
 
-func (c *Pages) SetOnPageSelected(callback func(tp string, unitId string)) {
+func (c *UnitsCardsWidget) SetOnPageSelected(callback func(tp string, unitId string)) {
 	c.onPageSelected = callback
 }
 
-func (c *Pages) loadPages() {
+func (c *UnitsCardsWidget) loadPages() {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 	ui.MainForm.LayoutingBlockPush()
@@ -53,14 +53,14 @@ func (c *Pages) loadPages() {
 	if len(state.Units) != c.loadedPagesCount || !c.loadedFirstTime {
 		c.panelPages.RemoveAllWidgets()
 
-		addPageWidget := NewAppPageWidget("Add Page", "Add New Page", "")
+		addPageWidget := NewAppPageWidget("Add Unit", "Add Unit", "")
 		addPageWidget.OnClick = func(unitId string) {
-			c.SelectPage("addpage", "")
+			c.SelectPage("addunit", "")
 		}
 		c.panelPages.AddWidgetOnGrid(addPageWidget, 0, 0)
 
 		for _, page := range state.Units {
-			pageWidget := NewPageWidget(page.UnitType, page.UnitTypeDisplayName, page.Id)
+			pageWidget := NewUnitCardWidget(page.UnitType, page.UnitTypeDisplayName, page.Id)
 			pageWidget.OnClick = func(unitId string) {
 				c.SelectPage("page", unitId)
 			}
@@ -71,7 +71,7 @@ func (c *Pages) loadPages() {
 
 	ws := c.panelPages.Widgets()
 	for _, w := range ws {
-		if pageWidget, ok := w.(*PageWidget); ok {
+		if pageWidget, ok := w.(*UnitCardWidget); ok {
 			pageWidget.UpdateData()
 		}
 	}
@@ -79,11 +79,11 @@ func (c *Pages) loadPages() {
 	c.loadedFirstTime = true
 }
 
-func (c *Pages) timerUpdate() {
+func (c *UnitsCardsWidget) timerUpdate() {
 	c.loadPages()
 }
 
-func (c *Pages) SelectPage(tp string, unitId string) {
+func (c *UnitsCardsWidget) SelectPage(tp string, unitId string) {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 
@@ -91,7 +91,7 @@ func (c *Pages) SelectPage(tp string, unitId string) {
 	c.selectedUnitId = unitId
 	if c.selectedType == "page" {
 		for _, widget := range c.panelPages.Widgets() {
-			if pageWidget, ok := widget.(*PageWidget); ok {
+			if pageWidget, ok := widget.(*UnitCardWidget); ok {
 				pageWidget.SetSelected(pageWidget.id == unitId)
 			}
 		}
@@ -102,9 +102,9 @@ func (c *Pages) SelectPage(tp string, unitId string) {
 		}
 	}
 
-	if c.selectedType == "addpage" {
+	if c.selectedType == "addunit" {
 		for _, widget := range c.panelPages.Widgets() {
-			if pageWidget, ok := widget.(*PageWidget); ok {
+			if pageWidget, ok := widget.(*UnitCardWidget); ok {
 				pageWidget.SetSelected(false)
 			}
 		}

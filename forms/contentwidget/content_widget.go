@@ -1,8 +1,8 @@
 package contentwidget
 
 import (
-	"github.com/u00io/gazer_node/forms/addpage"
-	"github.com/u00io/gazer_node/forms/pagedetailswidget"
+	"github.com/u00io/gazer_node/forms/addunit"
+	"github.com/u00io/gazer_node/forms/unitdetailswidget"
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -35,16 +35,16 @@ func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 
 	if typeOfContent == "page" {
 		c.panelContent.RemoveAllWidgets()
-		contentWidget := pagedetailswidget.NewPageDetailsWidget()
+		contentWidget := unitdetailswidget.NewUnitDetailsWidget()
 		contentWidget.SetUnitId(id)
 		c.panelContent.AddWidgetOnGrid(contentWidget, 0, 0)
 		contentWidget.SetXExpandable(true)
 		contentWidget.SetYExpandable(true)
 	}
 
-	if typeOfContent == "addpage" {
+	if typeOfContent == "addunit" {
 		c.panelContent.RemoveAllWidgets()
-		addPageWidget := addpage.NewAddPage()
+		addPageWidget := addunit.NewAddPage()
 		c.panelContent.AddWidgetOnGrid(addPageWidget, 0, 0)
 		addPageWidget.SetXExpandable(true)
 		addPageWidget.SetYExpandable(true)

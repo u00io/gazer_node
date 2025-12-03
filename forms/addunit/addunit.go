@@ -1,4 +1,4 @@
-package addpage
+package addunit
 
 import (
 	"image/color"
@@ -29,8 +29,8 @@ func NewAddPage() *AddPage {
 
 	c.panelCategories = ui.NewPanel()
 	c.panelCategories.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
-	c.panelCategories.SetMinWidth(300)
-	c.panelCategories.SetMaxWidth(300)
+	c.panelCategories.SetMinWidth(200)
+	c.panelCategories.SetMaxWidth(200)
 	c.panelCategories.SetYExpandable(true)
 	c.panelCategories.SetAllowScroll(true, true)
 	c.AddWidgetOnGrid(c.panelCategories, 0, 0)
@@ -148,7 +148,7 @@ func (c *AddPage) loadUnitTypes() {
 			continue
 		}
 
-		widget := NewUnitTypeWidget(record.TypeName)
+		widget := NewUnitTypeWidget(record.TypeName, record.TypeDisplayName)
 		widget.OnClick = func(clickedItem string) {
 			c.SelectUnitType(clickedItem)
 		}

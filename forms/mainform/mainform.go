@@ -2,7 +2,7 @@ package mainform
 
 import (
 	"github.com/u00io/gazer_node/forms/contentwidget"
-	"github.com/u00io/gazer_node/forms/pageswidget"
+	"github.com/u00io/gazer_node/forms/leftwidget"
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
 )
@@ -11,7 +11,7 @@ type MainForm struct {
 	ui.Widget
 	topPanel      *ui.Panel
 	centerPanel   *ui.Panel
-	pagesWidget   *pageswidget.Pages
+	pagesWidget   *leftwidget.UnitsCardsWidget
 	contentWidget *contentwidget.ContentWidget
 	bottomPanel   *ui.Panel
 }
@@ -37,7 +37,7 @@ func NewMainForm() *MainForm {
 	c.AddWidgetOnGrid(c.centerPanel, 1, 0)
 
 	// Pages widget
-	c.pagesWidget = pageswidget.NewPagesWidget()
+	c.pagesWidget = leftwidget.NewUnitsCardsWidget()
 	c.centerPanel.AddWidgetOnGrid(c.pagesWidget, 0, 0)
 	c.pagesWidget.SetXExpandable(false)
 	c.pagesWidget.SetYExpandable(true)
@@ -61,7 +61,7 @@ func NewMainForm() *MainForm {
 	// Bottom panel
 	c.bottomPanel = ui.NewPanel()
 	c.bottomPanel.SetYExpandable(false)
-	c.bottomPanel.AddWidgetOnGrid(ui.NewLabel("Powered by U00.io"), 0, 0)
+	c.bottomPanel.AddWidgetOnGrid(ui.NewLabel("Powered by Gazer.Cloud"), 0, 0)
 	c.AddWidgetOnGrid(c.bottomPanel, 2, 0)
 
 	return &c
@@ -69,8 +69,8 @@ func NewMainForm() *MainForm {
 
 func Run() {
 	form := ui.NewForm()
-	form.SetTitle("U00 Node")
-	form.SetSize(800, 600)
+	form.SetTitle("Gazer Node")
+	form.SetSize(1300, 800)
 
 	form.Panel().AddWidgetOnGrid(NewMainForm(), 0, 0)
 

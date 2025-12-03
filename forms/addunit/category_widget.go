@@ -1,4 +1,4 @@
-package addpage
+package addunit
 
 import (
 	"image/color"
@@ -32,8 +32,8 @@ func NewCategoryWidget(categoryName string) *CategoryWidget {
 	})
 	c.AddWidgetOnGrid(lbl, 0, 0)
 	c.SetYExpandable(false)
-	c.SetMinHeight(60)
-	c.SetMaxHeight(60)
+	c.SetMinHeight(90)
+	c.SetMaxHeight(90)
 	c.SetSelected(false)
 	c.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {

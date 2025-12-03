@@ -1,4 +1,4 @@
-package pagedetailswidget
+package unitdetailswidget
 
 import (
 	"github.com/u00io/gazer_node/config"
@@ -6,7 +6,7 @@ import (
 	"github.com/u00io/nuiforms/ui"
 )
 
-type PageDetailsWidget struct {
+type UnitDetailsWidget struct {
 	ui.Widget
 
 	unitId string
@@ -16,11 +16,11 @@ type PageDetailsWidget struct {
 
 	txtUrl *ui.TextBox
 
-	contentWidget *PageContentWidget
+	contentWidget *UnitContentWidget
 }
 
-func NewPageDetailsWidget() *PageDetailsWidget {
-	var c PageDetailsWidget
+func NewUnitDetailsWidget() *UnitDetailsWidget {
+	var c UnitDetailsWidget
 	c.InitWidget()
 
 	c.panelButtons = ui.NewPanel()
@@ -51,7 +51,7 @@ func NewPageDetailsWidget() *PageDetailsWidget {
 	c.panelContent.SetYExpandable(true)
 	c.AddWidgetOnGrid(c.panelContent, 1, 0)
 
-	c.contentWidget = NewPageContentWidget()
+	c.contentWidget = NewUnitContentWidget()
 	c.panelContent.AddWidgetOnGrid(c.contentWidget, 0, 0)
 	c.contentWidget.SetXExpandable(true)
 	c.contentWidget.SetYExpandable(true)
@@ -64,22 +64,22 @@ func NewPageDetailsWidget() *PageDetailsWidget {
 	return &c
 }
 
-func (c *PageDetailsWidget) SetUnitId(id string) {
+func (c *UnitDetailsWidget) SetUnitId(id string) {
 	c.unitId = id
 	c.contentWidget.SetUnitId(id)
 	if id == "" {
-		c.txtUrl.SetText("no page selected")
+		c.txtUrl.SetText("no unit selected")
 	} else {
-		c.txtUrl.SetText(c.generateUrl(id))
+		c.txtUrl.SetText(c.generateUrl(c.GetPublicKey()))
 	}
 	ui.UpdateMainForm()
 }
 
-func (c *PageDetailsWidget) generateUrl(id string) string {
+func (c *UnitDetailsWidget) generateUrl(id string) string {
 	return "https://gazer.cloud/view/" + id
 }
 
-func (c *PageDetailsWidget) GetPublicKey() string {
+func (c *UnitDetailsWidget) GetPublicKey() string {
 	unitConfig := config.UnitById(c.unitId)
 	if unitConfig == nil {
 		return ""
