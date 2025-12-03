@@ -1,0 +1,41 @@
+package unit01filecontent
+
+import (
+	"math"
+	"math/rand/v2"
+	"strconv"
+	"time"
+
+	unit00base "github.com/u00io/gazer_node/unit/unit_00_base"
+)
+
+type Unit01FileContent struct {
+	unit00base.Unit
+
+	counter int
+}
+
+func New() unit00base.IUnit {
+	var c Unit01FileContent
+	c.SetType("unit01filecontent")
+	c.Init(&c)
+	return &c
+}
+
+func (c *Unit01FileContent) Tick() {
+	demoData := ""
+	//demoData += time.Now().Format("15:04:05")
+	//rnd := rand.Int31() % 100
+	sinValue := math.Sin(float64(time.Now().Unix()%60)/60.0*2.0*math.Pi)*100 + 100
+	// add slow sin wave
+	sinValue += math.Sin(float64(time.Now().Unix()%300)/300.0*2.0*math.Pi)*50 + 50
+	// add fast sin wave
+	sinValue += math.Sin(float64(time.Now().Unix()%10)/10.0*2.0*math.Pi)*20 + 20
+	// add some noise
+	sinValue += (rand.Float64() - 0.5) * 10
+
+	demoData = strconv.FormatFloat(sinValue, 'f', 1, 64)
+
+	c.SetValue("value", demoData)
+	c.counter++
+}
