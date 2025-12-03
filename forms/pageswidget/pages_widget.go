@@ -8,6 +8,7 @@ import (
 type Pages struct {
 	ui.Widget
 
+	loadedFirstTime  bool
 	loadedPagesCount int
 
 	selectedType   string
@@ -49,7 +50,7 @@ func (c *Pages) loadPages() {
 	defer ui.MainForm.LayoutingBlockPop()
 
 	state := system.Instance.GetState()
-	if len(state.Units) != c.loadedPagesCount {
+	if len(state.Units) != c.loadedPagesCount || !c.loadedFirstTime {
 		c.panelPages.RemoveAllWidgets()
 
 		addPageWidget := NewAppPageWidget("Add Page", "Add New Page", "")
@@ -74,6 +75,8 @@ func (c *Pages) loadPages() {
 			pageWidget.UpdateData()
 		}
 	}
+
+	c.loadedFirstTime = true
 }
 
 func (c *Pages) timerUpdate() {

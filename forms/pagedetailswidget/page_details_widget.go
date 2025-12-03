@@ -1,6 +1,7 @@
 package pagedetailswidget
 
 import (
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/utils"
 	"github.com/u00io/nuiforms/ui"
 )
@@ -35,13 +36,13 @@ func NewPageDetailsWidget() *PageDetailsWidget {
 
 	btnCopy := ui.NewButton("Copy")
 	btnCopy.SetOnButtonClick(func(btn *ui.Button) {
-		ui.ClipboardSetText(c.generateUrl(c.unitId))
+		ui.ClipboardSetText(c.generateUrl(c.GetPublicKey()))
 	})
 	c.panelButtons.AddWidgetOnGrid(btnCopy, 0, 1)
 
 	btnOpen := ui.NewButton("Open")
 	btnOpen.SetOnButtonClick(func(btn *ui.Button) {
-		utils.OpenURL(c.generateUrl(c.unitId))
+		utils.OpenURL(c.generateUrl(c.GetPublicKey()))
 	})
 	c.panelButtons.AddWidgetOnGrid(btnOpen, 0, 2)
 
@@ -76,4 +77,12 @@ func (c *PageDetailsWidget) SetUnitId(id string) {
 
 func (c *PageDetailsWidget) generateUrl(id string) string {
 	return "https://gazer.cloud/view/" + id
+}
+
+func (c *PageDetailsWidget) GetPublicKey() string {
+	unitConfig := config.UnitById(c.unitId)
+	if unitConfig == nil {
+		return ""
+	}
+	return unitConfig.PublicKey
 }

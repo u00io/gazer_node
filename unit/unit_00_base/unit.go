@@ -9,6 +9,7 @@ import (
 )
 
 type Unit struct {
+	id      string
 	mtx     sync.Mutex
 	key     *utils.Key
 	tp      string
@@ -21,13 +22,18 @@ type Unit struct {
 
 type IUnit interface {
 	Start()
-	SetConfig(config map[string]string)
+	Stop()
+
+	SetId(id string)
 	GetId() string
+
 	GetKey() *utils.Key
+	SetKey(key *utils.Key)
+
+	SetConfig(config map[string]string)
 	GetType() string
 	GetValue(key string) string
 	SetValue(key, value string)
-	Stop()
 	Tick()
 }
 
@@ -35,19 +41,30 @@ func (c *Unit) Init(iUnit IUnit) {
 	c.config = make(map[string]string)
 	c.values = make(map[string]string)
 	c.iUnit = iUnit
-	c.key = utils.NewKey()
 }
 
 func (c *Unit) GetId() string {
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
-	return c.key.String()
+	return c.id
+}
+
+func (c *Unit) SetId(id string) {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+	c.id = id
 }
 
 func (c *Unit) GetKey() *utils.Key {
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
 	return c.key
+}
+
+func (c *Unit) SetKey(key *utils.Key) {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+	c.key = key
 }
 
 func (c *Unit) SetType(tp string) {

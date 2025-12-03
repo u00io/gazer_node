@@ -56,7 +56,11 @@ func NewAddPage() *AddPage {
 	c.panelConfigButtons.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
 	c.panelConfigButtons.SetAllowScroll(false, false)
 	c.panelConfigButtons.SetYExpandable(false)
-	c.panelConfigButtons.AddWidgetOnGrid(ui.NewButton("Save"), 0, 0)
+	btnAdd := ui.NewButton("Add")
+	btnAdd.SetOnButtonClick(func(btn *ui.Button) {
+		system.Instance.AddUnit(c.selectedUnitType, nil)
+	})
+	c.panelConfigButtons.AddWidgetOnGrid(btnAdd, 0, 0)
 	c.lblSelectedUnitType = ui.NewLabel("Selected Unit Type: None")
 	c.panelConfigButtons.AddWidgetOnGrid(c.lblSelectedUnitType, 0, 1)
 	c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 2)

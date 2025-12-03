@@ -23,10 +23,10 @@ func NewKey() *Key {
 	rand.Read(rnd)
 	k.PrivateKey = BytesToBase58(rnd)
 	pubKeyBytes := sha3.Sum256(rnd)
-	k.PublicKey = BytesToBase58(pubKeyBytes[:])
+	k.PublicKey = BytesToBase58(pubKeyBytes[:16])
 
-	k.PrivateKey = "XtVyouvUnGwL3HdVdGUzn2"
-	k.PublicKey = "8PbWjEouhKFY2Pfra5tFAK"
+	//k.PrivateKey = "XtVyouvUnGwL3HdVdGUzn2"
+	//k.PublicKey = "8PbWjEouhKFY2Pfra5tFAK"
 	return &k
 }
 
