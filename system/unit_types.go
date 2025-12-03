@@ -3,9 +3,8 @@ package system
 import (
 	"sort"
 
-	unit00base "github.com/u00io/gazer_node/unit/unit_00_base"
-	unit01filecontent "github.com/u00io/gazer_node/unit/unit_01_file_content"
-	unit02currenttime "github.com/u00io/gazer_node/unit/unit_02_current_time"
+	"github.com/u00io/gazer_node/unit/unit000base"
+	"github.com/u00io/gazer_node/unit/unit001demosignal"
 )
 
 type UnitCategory struct {
@@ -18,7 +17,7 @@ type UnitTypeRecord struct {
 	TypeDisplayName string
 
 	Categories  []string
-	Constructor func() unit00base.IUnit
+	Constructor func() unit000base.IUnit
 }
 
 type UnitsRegistry struct {
@@ -26,7 +25,7 @@ type UnitsRegistry struct {
 	UnitTypes      map[string]*UnitTypeRecord
 }
 
-func (r *UnitsRegistry) RegisterUnitType(unitType string, displayName string, constructor func() unit00base.IUnit, categories ...string) {
+func (r *UnitsRegistry) RegisterUnitType(unitType string, displayName string, constructor func() unit000base.IUnit, categories ...string) {
 	var record UnitTypeRecord
 	record.TypeName = unitType
 	record.TypeDisplayName = displayName
@@ -41,10 +40,10 @@ func init() {
 	Registry.UnitTypes = make(map[string]*UnitTypeRecord)
 
 	// General units
-	Registry.RegisterUnitType("unit001demosignal", "Demo Signal", unit01filecontent.New, "General")
+	Registry.RegisterUnitType("unit001demosignal", "Demo Signal", unit001demosignal.New, "General")
 
 	// Computer units
-	Registry.RegisterUnitType("unit101networkadapters", "Network Adapters", unit02currenttime.New, "Computer")
+	/*Registry.RegisterUnitType("unit101networkadapters", "Network Adapters", unit02currenttime.New, "Computer")
 	Registry.RegisterUnitType("unit102process", "Process", unit02currenttime.New, "Computer")
 	Registry.RegisterUnitType("unit103storage", "Storage", unit02currenttime.New, "Computer")
 	Registry.RegisterUnitType("unit104memory", "Memory", unit02currenttime.New, "Computer")
@@ -72,12 +71,12 @@ func init() {
 
 	// Console units
 	Registry.RegisterUnitType("unit701plainvalue", "Plain Value", unit02currenttime.New, "Console")
-	Registry.RegisterUnitType("unit702keyvalue", "Key=Value", unit02currenttime.New, "Console")
+	Registry.RegisterUnitType("unit702keyvalue", "Key=Value", unit02currenttime.New, "Console")*/
 
 	Registry.UpdateUnitCategories()
 }
 
-func createUnitByType(unitType string) unit00base.IUnit {
+func createUnitByType(unitType string) unit000base.IUnit {
 	if record, exists := Registry.UnitTypes[unitType]; exists {
 		return record.Constructor()
 	}

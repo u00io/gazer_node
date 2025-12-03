@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/u00io/gazer_node/config"
-	unit00base "github.com/u00io/gazer_node/unit/unit_00_base"
+	"github.com/u00io/gazer_node/unit/unit000base"
 	"github.com/u00io/gazer_node/utils"
 	"github.com/u00io/gomisc/logger"
 )
@@ -12,7 +12,7 @@ import (
 type System struct {
 	client *U00
 
-	units []unit00base.IUnit
+	units []unit000base.IUnit
 }
 
 var Instance *System
@@ -20,7 +20,7 @@ var Instance *System
 func NewSystem() *System {
 	var c System
 	c.client = NewU00()
-	c.units = make([]unit00base.IUnit, 0)
+	c.units = make([]unit000base.IUnit, 0)
 	return &c
 }
 
@@ -57,11 +57,6 @@ func (c *System) startAllUnits() {
 	}
 }
 
-func (c *System) LoadDefaultConfig() {
-	u01 := createUnitByType("unit01filecontent")
-	c.units = append(c.units, u01)
-}
-
 func (c *System) Test() {
 	// c.client.WriteValue("Test Value")
 }
@@ -84,7 +79,10 @@ func (c *System) SendValues() {
 				Value: value,
 				Uom:   "Value",
 			})
-			c.client.Write(unit.GetKey().PrivateKey, items)
+			key := unit.GetKey()
+			if key != nil {
+				c.client.Write(unit.GetKey().PrivateKey, items)
+			}
 		}
 	}
 }
@@ -110,12 +108,20 @@ func (c *System) GetState() State {
 
 func (c *System) AddUnit(unitType string, parameters map[string]string) {
 	id := config.AddUnit(unitType, parameters)
+
+	unitConfig := config.UnitById(id)
+	if unitConfig == nil {
+		logger.Println("System::AddUnit", "Cannot find added unit in config with id", id)
+		return
+	}
+
 	unit := createUnitByType(unitType)
 	if unit == nil {
 		logger.Println("System::AddUnit", "Cannot create unit of type", unitType)
 		return
 	}
 	unit.SetId(id)
+	unit.SetKey(utils.NewKeyFromPrivate(unitConfig.PrivateKey))
 	unit.SetConfig(parameters)
 	c.units = append(c.units, unit)
 	unit.Start()

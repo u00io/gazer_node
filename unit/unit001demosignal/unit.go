@@ -1,4 +1,4 @@
-package unit01filecontent
+package unit001demosignal
 
 import (
 	"math"
@@ -6,18 +6,18 @@ import (
 	"strconv"
 	"time"
 
-	unit00base "github.com/u00io/gazer_node/unit/unit_00_base"
+	"github.com/u00io/gazer_node/unit/unit000base"
 )
 
 type Unit01FileContent struct {
-	unit00base.Unit
+	unit000base.Unit
 
 	counter int
 }
 
-func New() unit00base.IUnit {
+func New() unit000base.IUnit {
 	var c Unit01FileContent
-	c.SetType("unit01filecontent")
+	c.SetType("unit001demosignal")
 	c.Init(&c)
 	return &c
 }
