@@ -33,6 +33,11 @@ func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 	ui.MainForm.LayoutingBlockPush()
 	defer ui.MainForm.LayoutingBlockPop()
 
+	if typeOfContent == "" {
+		c.panelContent.RemoveAllWidgets()
+		return
+	}
+
 	if typeOfContent == "page" {
 		c.panelContent.RemoveAllWidgets()
 		contentWidget := unitdetailswidget.NewUnitDetailsWidget()
@@ -40,6 +45,9 @@ func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 		c.panelContent.AddWidgetOnGrid(contentWidget, 0, 0)
 		contentWidget.SetXExpandable(true)
 		contentWidget.SetYExpandable(true)
+		contentWidget.OnRemoved = func() {
+			c.SetContent("", "")
+		}
 	}
 
 	if typeOfContent == "addunit" {
