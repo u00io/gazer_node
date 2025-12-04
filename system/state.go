@@ -1,5 +1,7 @@
 package system
 
+import "github.com/u00io/gazer_node/config"
+
 type UnitStateDataItem struct {
 	Key   string
 	Name  string
@@ -12,6 +14,8 @@ type UnitState struct {
 
 	UnitType            string
 	UnitTypeDisplayName string
+
+	Config config.ConfigUnit
 
 	Values []UnitStateDataItem
 }

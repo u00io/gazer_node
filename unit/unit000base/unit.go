@@ -1,8 +1,6 @@
 package unit000base
 
 import (
-	"fmt"
-	"strconv"
 	"sync"
 	"time"
 
@@ -10,6 +8,13 @@ import (
 	"github.com/u00io/gazer_node/utils"
 	"github.com/u00io/gomisc/logger"
 )
+
+type ItemValue struct {
+	Key   string
+	Name  string
+	Value string
+	Uom   string
+}
 
 type Unit struct {
 	id      string
@@ -19,7 +24,7 @@ type Unit struct {
 	started bool
 	stoping bool
 	config  *config.ConfigUnit
-	values  map[string]string
+	values  map[string]ItemValue
 	iUnit   IUnit
 }
 
@@ -36,25 +41,17 @@ type IUnit interface {
 	SetConfig(config config.ConfigUnit)
 	GetConfig() config.ConfigUnit
 
-	GetParameterBool(key string, defaultValue bool) bool
-	GetParameterInt64(key string, defaultValue int64) int64
-	GetParameterFloat64(key string, defaultValue float64) float64
-	GetParameterString(key string, defaultValue string) string
-
-	SetParameterBool(key string, value bool)
-	SetParameterInt64(key string, value int64)
-	SetParameterFloat64(key string, value float64)
-	SetParameterString(key string, value string)
+	Config() *config.ConfigUnit
 
 	GetType() string
-	GetValue(key string) string
-	GetValues() map[string]string
-	SetValue(key, value string)
+	GetValue(key string) ItemValue
+	GetValues() map[string]ItemValue
+	SetValue(key string, name string, value string, uom string)
 	Tick()
 }
 
 func (c *Unit) Init(iUnit IUnit) {
-	c.values = make(map[string]string)
+	c.values = make(map[string]ItemValue)
 	c.config = config.NewConfigUnit()
 	c.config.Type = c.GetType()
 	c.config.Parameters = make(map[string]string)
@@ -105,88 +102,46 @@ func (c *Unit) SetConfig(config config.ConfigUnit) {
 
 func (c *Unit) GetConfig() config.ConfigUnit {
 	c.mtx.Lock()
+	result := *c.config
 	defer c.mtx.Unlock()
-	return *c.config
+	return result
 }
 
-func (c *Unit) GetParameterBool(key string, defaultValue bool) bool {
-	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
-	value, err := strconv.ParseBool(valueStr)
-	if err != nil {
-		return defaultValue
-	}
-	return value
-}
-
-func (c *Unit) GetParameterInt64(key string, defaultValue int64) int64 {
-	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
-	value, err := strconv.ParseInt(valueStr, 10, 64)
-	if err != nil {
-		return defaultValue
-	}
-	return value
-}
-
-func (c *Unit) GetParameterFloat64(key string, defaultValue float64) float64 {
-	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
-	value, err := strconv.ParseFloat(valueStr, 64)
-	if err != nil {
-		return defaultValue
-	}
-	return value
-}
-
-func (c *Unit) GetParameterString(key string, defaultValue string) string {
+func (c *Unit) Config() *config.ConfigUnit {
 	c.mtx.Lock()
-	value, exists := c.config.Parameters[key]
-	c.mtx.Unlock()
-	if !exists {
-		return defaultValue
-	}
-	return value
+	defer c.mtx.Unlock()
+	return c.config
 }
 
-func (c *Unit) SetParameterBool(key string, value bool) {
-	c.SetParameterString(key, fmt.Sprint(value))
-}
-
-func (c *Unit) SetParameterInt64(key string, value int64) {
-	c.SetParameterString(key, fmt.Sprint(value))
-}
-
-func (c *Unit) SetParameterFloat64(key string, value float64) {
-	c.SetParameterString(key, fmt.Sprint(value))
-}
-
-func (c *Unit) SetParameterString(key string, value string) {
-	c.mtx.Lock()
-	c.config.Parameters[key] = value
-	c.mtx.Unlock()
-}
-
-func (c *Unit) GetValue(key string) string {
+func (c *Unit) GetValue(key string) ItemValue {
 	c.mtx.Lock()
 	value, exists := c.values[key]
 	c.mtx.Unlock()
 	if !exists {
-		return ""
+		return ItemValue{}
 	}
 	return value
 }
 
-func (c *Unit) GetValues() map[string]string {
+func (c *Unit) GetValues() map[string]ItemValue {
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
-	result := make(map[string]string)
+	result := make(map[string]ItemValue)
 	for k, v := range c.values {
 		result[k] = v
 	}
 	return result
 }
 
-func (c *Unit) SetValue(key, value string) {
+func (c *Unit) SetValue(key string, name string, value string, uom string) {
+	itemValue := ItemValue{
+		Key:   key,
+		Name:  name,
+		Value: value,
+		Uom:   uom,
+	}
 	c.mtx.Lock()
-	c.values[key] = value
+	c.values[key] = itemValue
 	c.mtx.Unlock()
 }
 

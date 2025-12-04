@@ -28,7 +28,6 @@ func NewUnitConfigWidget() *UnitConfigWidget {
 	c.lvItems.SetEditTriggerEnter(true)
 	c.lvItems.SetEditTriggerF2(true)
 	c.lvItems.SetEditTriggerDoubleClick(true)
-	c.lvItems.SetRowCount(10)
 	c.AddWidgetOnGrid(c.lvItems, 0, 0)
 	return &c
 }
@@ -49,6 +48,8 @@ func (c *UnitConfigWidget) SetUnitType(unitType string, parameters map[string]st
 	sort.Slice(items, func(i, j int) bool {
 		return items[i].key < items[j].key
 	})
+
+	c.lvItems.SetRowCount(len(items))
 
 	for row := 0; row < len(items); row++ {
 		c.lvItems.SetCellText2(row, 0, items[row].key)

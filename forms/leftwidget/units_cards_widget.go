@@ -68,7 +68,7 @@ func (c *UnitsCardsWidget) loadPages() {
 		c.panelPages.AddWidgetOnGrid(addPageWidget, 0, 0)
 
 		for _, unit := range unitsFromConfig {
-			pageWidget := NewUnitCardWidget(unit.Type, unit.Type, unit.Id)
+			pageWidget := NewUnitCardWidget(unit.Id)
 			pageWidget.OnClick = func(unitId string) {
 				c.SelectPage("page", unitId)
 			}

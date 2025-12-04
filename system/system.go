@@ -127,14 +127,16 @@ func (c *System) SendValues() {
 		if unit.GetConfig().Translate == false {
 			continue
 		}
-		value := unit.GetValue("/")
-		if value != "" {
+		values := unit.GetValues()
+		//name := unit.GetParameterString("001_name_str", unit.GetType())
+
+		for _, value := range values {
 			var items []ItemToSet
 			items = append(items, ItemToSet{
-				Path:  "/",
-				Name:  "value",
-				Value: value,
-				Uom:   "Value",
+				Path:  value.Key,
+				Name:  value.Name,
+				Value: value.Value,
+				Uom:   value.Uom,
 			})
 			key := unit.GetKey()
 			if key != nil {
@@ -153,12 +155,12 @@ func (c *System) GetState() State {
 		}
 
 		values := make([]UnitStateDataItem, 0)
-		for k, v := range unit.GetValues() {
+		for _, v := range unit.GetValues() {
 			values = append(values, UnitStateDataItem{
-				Key:   k,
-				Name:  k,
-				Value: v,
-				UOM:   "",
+				Key:   v.Key,
+				Name:  v.Name,
+				Value: v.Value,
+				UOM:   v.Uom,
 			})
 		}
 
@@ -167,6 +169,7 @@ func (c *System) GetState() State {
 			UnitType:            unit.GetType(),
 			UnitTypeDisplayName: typeDisplayName,
 			Values:              values,
+			Config:              unit.GetConfig(),
 		}
 		state.Units = append(state.Units, unitState)
 	}
@@ -203,7 +206,8 @@ func (c *System) RemoveUnit(unitId string) {
 func (c *System) GetUnitDefaultItemValue(unitId string) string {
 	for _, unit := range c.units {
 		if unit.GetId() == unitId {
-			return unit.GetValue("/")
+			v := unit.GetValue("/")
+			return v.Value
 		}
 	}
 	return ""

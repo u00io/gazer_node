@@ -14,18 +14,15 @@ type UnitCardWidget struct {
 	ui.Widget
 	id string
 
-	categoryName        string
-	categoryDisplayName string
-
 	selected bool
 	OnClick  func(clickedCategory string)
 
-	lblCategory *ui.Label
-	lblUnitId   *ui.Label
-	lblValue    *ui.Label
+	lblName   *ui.Label
+	lblUnitId *ui.Label
+	lblValue  *ui.Label
 }
 
-func NewUnitCardWidget(categoryName string, categoryDisplayName string, id string) *UnitCardWidget {
+func NewUnitCardWidget(id string) *UnitCardWidget {
 	var c UnitCardWidget
 	c.InitWidget()
 
@@ -33,18 +30,16 @@ func NewUnitCardWidget(categoryName string, categoryDisplayName string, id strin
 	c.SetAutoFillBackground(true)
 
 	c.id = id
-	c.categoryName = categoryName
-	c.categoryDisplayName = categoryDisplayName
 
-	c.lblCategory = ui.NewLabel(categoryDisplayName)
-	c.lblCategory.SetMouseCursor(nuimouse.MouseCursorPointer)
-	c.lblCategory.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
+	c.lblName = ui.NewLabel("")
+	c.lblName.SetMouseCursor(nuimouse.MouseCursorPointer)
+	c.lblName.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
 			c.Click()
 		}
 		return true
 	})
-	c.AddWidgetOnGrid(c.lblCategory, 0, 0)
+	c.AddWidgetOnGrid(c.lblName, 0, 0)
 
 	unitIdShort := ""
 	unit := config.UnitById(id)
@@ -103,12 +98,12 @@ func (c *UnitCardWidget) SetSelected(selected bool) {
 	if selected {
 		backColor := c.BackgroundColorAccent2()
 		c.SetBackgroundColor(backColor)
-		c.lblCategory.SetBackgroundColor(backColor)
+		c.lblName.SetBackgroundColor(backColor)
 		c.lblUnitId.SetBackgroundColor(backColor)
 	} else {
 		backColor := c.BackgroundColorAccent1()
 		c.SetBackgroundColor(backColor)
-		c.lblCategory.SetBackgroundColor(backColor)
+		c.lblName.SetBackgroundColor(backColor)
 		c.lblUnitId.SetBackgroundColor(backColor)
 	}
 }
@@ -118,5 +113,10 @@ func (c *UnitCardWidget) IsSelected() bool {
 }
 
 func (c *UnitCardWidget) UpdateData() {
+	unitConfig := config.UnitById(c.id)
+	if unitConfig == nil {
+		return
+	}
+	c.lblName.SetText(unitConfig.GetParameterString("001_name_str", unitConfig.Type))
 	c.lblValue.SetText(system.Instance.GetUnitDefaultItemValue(c.id))
 }

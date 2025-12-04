@@ -17,6 +17,10 @@ type UnitDetailsWidget struct {
 	panelButtons *ui.Panel
 	panelContent *ui.Panel
 
+	lblUnitName *ui.Label
+
+	lblTranslateStatus *ui.Label
+
 	txtUrl *ui.TextBox
 
 	configWidget *configwidget.UnitConfigWidget
@@ -33,37 +37,16 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelHeader.SetBackgroundColor(c.BackgroundColorAccent2())
 	c.AddWidgetOnGrid(c.panelHeader, 0, 0)
 
-	btnRemove := ui.NewButton("Remove Unit")
+	c.lblUnitName = ui.NewLabel("Unit Details")
+	c.panelHeader.AddWidgetOnGrid(c.lblUnitName, 0, 0)
+
+	btnRemove := ui.NewButton("Remove")
 	btnRemove.SetOnButtonClick(func(btn *ui.Button) {
 		if c.unitId != "" {
 			system.Instance.RemoveUnit(c.unitId)
 		}
 	})
-	c.panelHeader.AddWidgetOnGrid(btnRemove, 0, 0)
-	btnSaveConfig := ui.NewButton("Save Config")
-	btnSaveConfig.SetOnButtonClick(func(btn *ui.Button) {
-		if c.unitId != "" {
-			c.saveConfig()
-		}
-	})
-	c.panelHeader.AddWidgetOnGrid(btnSaveConfig, 0, 1)
-
-	btnTranslateOn := ui.NewButton("Translate On")
-	btnTranslateOn.SetSize(100, 30)
-	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
-		if c.unitId != "" {
-			system.Instance.SetUnitTranslate(c.unitId, true)
-		}
-	})
-	c.panelHeader.AddWidgetOnGrid(btnTranslateOn, 0, 2)
-
-	btnTranslateOff := ui.NewButton("Translate Off")
-	btnTranslateOff.SetOnButtonClick(func(btn *ui.Button) {
-		if c.unitId != "" {
-			system.Instance.SetUnitTranslate(c.unitId, false)
-		}
-	})
-	c.panelHeader.AddWidgetOnGrid(btnTranslateOff, 0, 3)
+	c.panelHeader.AddWidgetOnGrid(btnRemove, 0, 10)
 
 	c.panelHeader.AddWidgetOnGrid(ui.NewHSpacer(), 0, 5)
 
@@ -76,41 +59,111 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.txtUrl.SetReadOnly(true)
 	c.txtUrl.SetCanBeFocused(false)
 	c.txtUrl.SetEmptyText("")
-	c.panelButtons.AddWidgetOnGrid(c.txtUrl, 0, 0)
+	c.panelButtons.AddWidgetOnGrid(c.txtUrl, 0, 1)
 
 	btnCopy := ui.NewButton("Copy")
 	btnCopy.SetOnButtonClick(func(btn *ui.Button) {
 		ui.ClipboardSetText(c.generateUrl(c.GetPublicKey()))
 	})
-	c.panelButtons.AddWidgetOnGrid(btnCopy, 0, 1)
+	c.panelButtons.AddWidgetOnGrid(btnCopy, 0, 2)
 
 	btnOpen := ui.NewButton("Open")
 	btnOpen.SetOnButtonClick(func(btn *ui.Button) {
 		utils.OpenURL(c.generateUrl(c.GetPublicKey()))
 	})
-	c.panelButtons.AddWidgetOnGrid(btnOpen, 0, 2)
+	c.panelButtons.AddWidgetOnGrid(btnOpen, 0, 3)
 
 	c.panelContent = ui.NewPanel()
 	c.panelContent.SetXExpandable(true)
 	c.panelContent.SetYExpandable(true)
 	c.AddWidgetOnGrid(c.panelContent, 2, 0)
 
+	panelConfig := ui.NewPanel()
+	panelConfig.SetXExpandable(false)
+	panelConfig.SetYExpandable(true)
+	panelConfig.SetMinWidth(380)
+	panelConfig.SetMaxWidth(380)
+	c.panelContent.AddWidgetOnGrid(panelConfig, 0, 0)
+
+	panelConfigButtons := ui.NewPanel()
+	panelConfigButtons.SetYExpandable(false)
+	panelConfig.AddWidgetOnGrid(panelConfigButtons, 0, 0)
+
+	btnSaveConfig := ui.NewButton("Save")
+	btnSaveConfig.SetOnButtonClick(func(btn *ui.Button) {
+		c.saveConfig()
+	})
+	panelConfigButtons.AddWidgetOnGrid(btnSaveConfig, 0, 0)
+
+	btnUnitStart := ui.NewButton("Start")
+	btnUnitStart.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.StartUnit(c.unitId)
+		}
+	})
+	panelConfigButtons.AddWidgetOnGrid(btnUnitStart, 0, 1)
+
+	btnUnitStop := ui.NewButton("Stop")
+	btnUnitStop.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.StopUnit(c.unitId)
+		}
+	})
+	panelConfigButtons.AddWidgetOnGrid(btnUnitStop, 0, 2)
+
+	panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 10)
+
 	c.configWidget = configwidget.NewUnitConfigWidget()
 	c.configWidget.SetXExpandable(true)
-	c.configWidget.SetYExpandable(false)
-	c.configWidget.SetMinWidth(380)
-	c.configWidget.SetMaxWidth(380)
-	c.panelContent.AddWidgetOnGrid(c.configWidget, 0, 0)
+	c.configWidget.SetYExpandable(true)
+	panelConfig.AddWidgetOnGrid(c.configWidget, 1, 0)
+
+	panelUnitState := ui.NewPanel()
+	panelUnitState.SetXExpandable(true)
+	panelUnitState.SetYExpandable(true)
+	c.panelContent.AddWidgetOnGrid(panelUnitState, 0, 1)
+
+	panelUnitStateButtons := ui.NewPanel()
+	panelUnitStateButtons.SetYExpandable(false)
+	panelUnitState.AddWidgetOnGrid(panelUnitStateButtons, 0, 0)
+
+	btnTranslateOn := ui.NewButton("Tr On")
+	btnTranslateOn.SetSize(100, 30)
+	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.SetUnitTranslate(c.unitId, true)
+		}
+	})
+	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOn, 0, 0)
+
+	btnTranslateOff := ui.NewButton("Tr Off")
+	btnTranslateOff.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.SetUnitTranslate(c.unitId, false)
+		}
+	})
+	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOff, 0, 1)
+
+	c.lblTranslateStatus = ui.NewLabel("---")
+	c.lblTranslateStatus.SetMinWidth(100)
+	c.lblTranslateStatus.SetMaxWidth(100)
+	panelUnitStateButtons.AddWidgetOnGrid(c.lblTranslateStatus, 0, 2)
+
+	panelUnitStateButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 10)
 
 	c.lvDataItems = ui.NewTable()
 	c.lvDataItems.SetXExpandable(true)
 	c.lvDataItems.SetYExpandable(true)
 	c.lvDataItems.SetColumnCount(4)
 	c.lvDataItems.SetColumnName(0, "Key")
+	c.lvDataItems.SetColumnWidth(0, 100)
 	c.lvDataItems.SetColumnName(1, "Name")
+	c.lvDataItems.SetColumnWidth(1, 150)
 	c.lvDataItems.SetColumnName(2, "Value")
+	c.lvDataItems.SetColumnWidth(2, 150)
 	c.lvDataItems.SetColumnName(3, "UOM")
-	c.panelContent.AddWidgetOnGrid(c.lvDataItems, 0, 1)
+	c.lvDataItems.SetColumnWidth(3, 100)
+	panelUnitState.AddWidgetOnGrid(c.lvDataItems, 1, 0)
 
 	c.SetPanelPadding(1)
 	c.SetBackgroundColor(c.BackgroundColorAccent1())
@@ -184,6 +237,14 @@ func (c *UnitDetailsWidget) updateUnitValues() {
 		c.lvDataItems.SetRowCount(0)
 		return
 	}
+
+	translationStatus := "Off"
+	if currentUnit.Config.Translate {
+		translationStatus = "On"
+	}
+	c.lblTranslateStatus.SetText("Tr: " + translationStatus)
+
+	c.lblUnitName.SetText(currentUnit.Config.GetParameterString("001_name_str", currentUnit.Config.Type))
 
 	c.lvDataItems.SetRowCount(len(currentUnit.Values))
 	for rowIndex, item := range currentUnit.Values {

@@ -20,13 +20,13 @@ func New() unit000base.IUnit {
 	c.SetType("unit001demosignal")
 	c.Init(&c)
 
-	c.SetParameterFloat64("100_offset_num", 0.0)
+	c.Config().SetParameterFloat64("100_offset_num", 0.0)
 
 	return &c
 }
 
 func (c *Unit01FileContent) Tick() {
-	offset := c.GetParameterFloat64("100_offset_num", 0.0)
+	offset := c.Config().GetParameterFloat64("100_offset_num", 0.0)
 
 	demoData := ""
 	//demoData += time.Now().Format("15:04:05")
@@ -44,6 +44,6 @@ func (c *Unit01FileContent) Tick() {
 
 	demoData = strconv.FormatFloat(sinValue, 'f', 1, 64)
 
-	c.SetValue("/", demoData)
+	c.SetValue("/", "Demo Signal", demoData, "units")
 	c.counter++
 }

@@ -111,6 +111,6 @@ func (r *UnitsRegistry) GetUnitTypeDefaultParameters(unitType string) map[string
 			result[k] = v
 		}
 	}
-	result["000_name_str"] = unitType + " Instance"
+	result["001_name_str"] = unitType + " Instance"
 	return result
 }

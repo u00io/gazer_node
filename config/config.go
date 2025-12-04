@@ -4,7 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/u00io/gazer_node/localstorage"
 	"github.com/u00io/gazer_node/utils"
@@ -91,4 +93,55 @@ func UnitById(unitId string) *ConfigUnit {
 		}
 	}
 	return nil
+}
+
+func (c *ConfigUnit) GetParameterBool(key string, defaultValue bool) bool {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseBool(valueStr)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *ConfigUnit) GetParameterInt64(key string, defaultValue int64) int64 {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseInt(valueStr, 10, 64)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *ConfigUnit) GetParameterFloat64(key string, defaultValue float64) float64 {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseFloat(valueStr, 64)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *ConfigUnit) GetParameterString(key string, defaultValue string) string {
+	value, exists := c.Parameters[key]
+	if !exists {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *ConfigUnit) SetParameterBool(key string, value bool) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *ConfigUnit) SetParameterInt64(key string, value int64) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *ConfigUnit) SetParameterFloat64(key string, value float64) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *ConfigUnit) SetParameterString(key string, value string) {
+	c.Parameters[key] = value
 }
