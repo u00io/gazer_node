@@ -1,4 +1,4 @@
-package addunit
+package addunitwidget
 
 import (
 	"image/color"

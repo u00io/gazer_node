@@ -1,7 +1,7 @@
 package mainform
 
 import (
-	"github.com/u00io/gazer_node/forms/contentwidget"
+	"github.com/u00io/gazer_node/forms/centerwidget"
 	"github.com/u00io/gazer_node/forms/leftwidget"
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
@@ -9,11 +9,11 @@ import (
 
 type MainForm struct {
 	ui.Widget
-	topPanel      *ui.Panel
-	centerPanel   *ui.Panel
-	pagesWidget   *leftwidget.UnitsCardsWidget
-	contentWidget *contentwidget.ContentWidget
-	bottomPanel   *ui.Panel
+	topPanel     *ui.Panel
+	centerPanel  *ui.Panel
+	pagesWidget  *leftwidget.UnitsCardsWidget
+	centerWidget *centerwidget.CenterWidget
+	bottomPanel  *ui.Panel
 }
 
 func NewMainForm() *MainForm {
@@ -43,7 +43,7 @@ func NewMainForm() *MainForm {
 	c.pagesWidget.SetYExpandable(true)
 	c.pagesWidget.SetMaxWidth(300)
 	c.pagesWidget.SetOnPageSelected(func(tp, unitId string) {
-		c.contentWidget.SetContent(tp, unitId)
+		c.centerWidget.SetContent(tp, unitId)
 	})
 
 	separator := ui.NewPanel()
@@ -52,11 +52,11 @@ func NewMainForm() *MainForm {
 	separator.SetBackgroundColor(c.BackgroundColorAccent1())
 	c.centerPanel.AddWidgetOnGrid(separator, 0, 1)
 
-	// Content widget
-	c.contentWidget = contentwidget.NewContentWidget()
-	c.centerPanel.AddWidgetOnGrid(c.contentWidget, 0, 2)
-	c.contentWidget.SetXExpandable(true)
-	c.contentWidget.SetYExpandable(true)
+	// Center widget
+	c.centerWidget = centerwidget.NewCenterWidget()
+	c.centerPanel.AddWidgetOnGrid(c.centerWidget, 0, 2)
+	c.centerWidget.SetXExpandable(true)
+	c.centerWidget.SetYExpandable(true)
 
 	// Bottom panel
 	c.bottomPanel = ui.NewPanel()
@@ -80,7 +80,7 @@ func (c *MainForm) timerUpdate() {
 
 func (c *MainForm) HandleSystemEvent(event string) {
 	c.pagesWidget.HandleSystemEvent(event)
-	c.contentWidget.HandleSystemEvent(event)
+	c.centerWidget.HandleSystemEvent(event)
 }
 
 func Run() {

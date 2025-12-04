@@ -2,7 +2,7 @@ package unitdetailswidget
 
 import (
 	"github.com/u00io/gazer_node/config"
-	"github.com/u00io/gazer_node/forms/addunit"
+	"github.com/u00io/gazer_node/forms/configwidget"
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/gazer_node/utils"
 	"github.com/u00io/nuiforms/ui"
@@ -19,7 +19,7 @@ type UnitDetailsWidget struct {
 
 	txtUrl *ui.TextBox
 
-	configWidget *addunit.UnitConfigWidget
+	configWidget *configwidget.UnitConfigWidget
 	lvDataItems  *ui.Table
 }
 
@@ -78,7 +78,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelContent.SetYExpandable(true)
 	c.AddWidgetOnGrid(c.panelContent, 2, 0)
 
-	c.configWidget = addunit.NewUnitConfigWidget()
+	c.configWidget = configwidget.NewUnitConfigWidget()
 	c.configWidget.SetXExpandable(true)
 	c.configWidget.SetYExpandable(false)
 	c.configWidget.SetMinWidth(380)

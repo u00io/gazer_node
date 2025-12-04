@@ -1,8 +1,9 @@
-package addunit
+package addunitwidget
 
 import (
 	"image/color"
 
+	"github.com/u00io/gazer_node/forms/configwidget"
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
 )
@@ -20,7 +21,7 @@ type AddPage struct {
 	panelConfigButtons  *ui.Panel
 	lblSelectedUnitType *ui.Label
 
-	configWidget *UnitConfigWidget
+	configWidget *configwidget.UnitConfigWidget
 }
 
 func NewAddPage() *AddPage {
@@ -49,7 +50,7 @@ func NewAddPage() *AddPage {
 	c.panelConfig.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
 	//c.panelConfig.SetAllowScroll(true, true)
 	c.panelConfig.SetYExpandable(true)
-	c.configWidget = NewUnitConfigWidget()
+	c.configWidget = configwidget.NewUnitConfigWidget()
 	c.configWidget.SetMinWidth(300)
 
 	c.panelConfig.AddWidgetOnGrid(c.configWidget, 1, 0)

@@ -1,13 +1,13 @@
-package contentwidget
+package centerwidget
 
 import (
 	"github.com/u00io/gazer_node/config"
-	"github.com/u00io/gazer_node/forms/addunit"
+	"github.com/u00io/gazer_node/forms/addunitwidget"
 	"github.com/u00io/gazer_node/forms/unitdetailswidget"
 	"github.com/u00io/nuiforms/ui"
 )
 
-type ContentWidget struct {
+type CenterWidget struct {
 	ui.Widget
 	panelContent *ui.Panel
 
@@ -15,8 +15,8 @@ type ContentWidget struct {
 	id            string
 }
 
-func NewContentWidget() *ContentWidget {
-	var c ContentWidget
+func NewCenterWidget() *CenterWidget {
+	var c CenterWidget
 	c.InitWidget()
 
 	c.panelContent = ui.NewPanel()
@@ -30,7 +30,7 @@ func NewContentWidget() *ContentWidget {
 	return &c
 }
 
-func (c *ContentWidget) HandleSystemEvent(event string) {
+func (c *CenterWidget) HandleSystemEvent(event string) {
 	if event == "config_changed" {
 		// Check if current content exists in config
 		if c.typeOfContent == "page" {
@@ -51,7 +51,7 @@ func (c *ContentWidget) HandleSystemEvent(event string) {
 	}
 }
 
-func (c *ContentWidget) SetContent(typeOfContent string, id string) {
+func (c *CenterWidget) SetContent(typeOfContent string, id string) {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 
@@ -77,7 +77,7 @@ func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 
 	if typeOfContent == "addunit" {
 		c.panelContent.RemoveAllWidgets()
-		addPageWidget := addunit.NewAddPage()
+		addPageWidget := addunitwidget.NewAddPage()
 		c.panelContent.AddWidgetOnGrid(addPageWidget, 0, 0)
 		addPageWidget.SetXExpandable(true)
 		addPageWidget.SetYExpandable(true)

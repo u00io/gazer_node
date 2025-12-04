@@ -1,4 +1,4 @@
-package addunit
+package configwidget
 
 import (
 	"sort"
