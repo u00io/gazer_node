@@ -40,7 +40,7 @@ func NewUnitsCardsWidget() *UnitsCardsWidget {
 }
 
 func (c *UnitsCardsWidget) HandleSystemEvent(event string) {
-	if event == "unit_removed" {
+	if event == "config_changed" {
 		c.loadPages()
 	}
 }

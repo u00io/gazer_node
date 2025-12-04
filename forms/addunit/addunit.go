@@ -105,7 +105,7 @@ func (c *AddPage) SelectUnitType(unitType string) {
 		}
 	}
 	c.lblSelectedUnitType.SetText(unitType)
-	c.configWidget.SetUnitType(unitType)
+	c.configWidget.SetUnitType(unitType, system.Registry.GetUnitTypeDefaultParameters(unitType))
 }
 
 func (c *AddPage) loadCategories() {

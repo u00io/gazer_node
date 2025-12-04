@@ -101,3 +101,13 @@ func (r *UnitsRegistry) UpdateUnitCategories() {
 		return r.UnitCategories[i].Name < r.UnitCategories[j].Name
 	})
 }
+
+func (r *UnitsRegistry) GetUnitTypeDefaultParameters(unitType string) map[string]string {
+	result := make(map[string]string)
+	if record, exists := r.UnitTypes[unitType]; exists {
+		unit := record.Constructor()
+		result = unit.GetConfig()
+	}
+	result["000_name_str"] = unitType + " Instance"
+	return result
+}

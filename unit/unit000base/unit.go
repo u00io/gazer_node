@@ -33,11 +33,17 @@ type IUnit interface {
 	SetKey(key *utils.Key)
 
 	SetConfig(config map[string]string)
+	GetConfig() map[string]string
 
 	GetParameterBool(key string, defaultValue bool) bool
 	GetParameterInt64(key string, defaultValue int64) int64
 	GetParameterFloat64(key string, defaultValue float64) float64
 	GetParameterString(key string, defaultValue string) string
+
+	SetParameterBool(key string, value bool)
+	SetParameterInt64(key string, value int64)
+	SetParameterFloat64(key string, value float64)
+	SetParameterString(key string, value string)
 
 	GetType() string
 	GetValue(key string) string
@@ -93,6 +99,12 @@ func (c *Unit) SetConfig(config map[string]string) {
 	c.mtx.Unlock()
 }
 
+func (c *Unit) GetConfig() map[string]string {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+	return c.config
+}
+
 func (c *Unit) GetParameterBool(key string, defaultValue bool) bool {
 	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
 	value, err := strconv.ParseBool(valueStr)
@@ -128,6 +140,24 @@ func (c *Unit) GetParameterString(key string, defaultValue string) string {
 		return defaultValue
 	}
 	return value
+}
+
+func (c *Unit) SetParameterBool(key string, value bool) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *Unit) SetParameterInt64(key string, value int64) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *Unit) SetParameterFloat64(key string, value float64) {
+	c.SetParameterString(key, fmt.Sprint(value))
+}
+
+func (c *Unit) SetParameterString(key string, value string) {
+	c.mtx.Lock()
+	c.config[key] = value
+	c.mtx.Unlock()
 }
 
 func (c *Unit) GetValue(key string) string {

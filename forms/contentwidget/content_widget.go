@@ -31,7 +31,7 @@ func NewContentWidget() *ContentWidget {
 }
 
 func (c *ContentWidget) HandleSystemEvent(event string) {
-	if event == "unit_removed" {
+	if event == "config_changed" {
 		// Check if current content exists in config
 		if c.typeOfContent == "page" {
 			unitsFromConfig := config.Units()

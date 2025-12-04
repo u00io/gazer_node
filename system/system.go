@@ -55,6 +55,24 @@ func (c *System) Start() {
 func (c *System) Stop() {
 }
 
+func (c *System) StartUnit(unitId string) {
+	for _, unit := range c.units {
+		if unit.GetId() == unitId {
+			unit.Start()
+			return
+		}
+	}
+}
+
+func (c *System) StopUnit(unitId string) {
+	for _, unit := range c.units {
+		if unit.GetId() == unitId {
+			unit.Stop()
+			return
+		}
+	}
+}
+
 func (c *System) EmitEvent(event string) {
 	c.mtx.Lock()
 	c.events = append(c.events, event)
@@ -151,7 +169,7 @@ func (c *System) RemoveUnit(unitId string) {
 		if unit.GetId() == unitId {
 			unit.Stop()
 			c.units = append(c.units[:i], c.units[i+1:]...)
-			c.EmitEvent("unit_removed")
+			c.EmitEvent("config_changed")
 			return
 		}
 	}

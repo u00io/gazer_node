@@ -1,6 +1,8 @@
 package addunit
 
 import (
+	"sort"
+
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -31,9 +33,27 @@ func NewUnitConfigWidget() *UnitConfigWidget {
 	return &c
 }
 
-func (c *UnitConfigWidget) SetUnitType(unitType string) {
+func (c *UnitConfigWidget) SetUnitType(unitType string, parameters map[string]string) {
 	// Load properties from unit type
 	c.unitType = unitType
+	type Item struct {
+		key   string
+		value string
+	}
+	var items []Item
+
+	for k, v := range parameters {
+		items = append(items, Item{key: k, value: v})
+	}
+
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].key < items[j].key
+	})
+
+	for row := 0; row < len(items); row++ {
+		c.lvItems.SetCellText2(row, 0, items[row].key)
+		c.lvItems.SetCellText2(row, 1, items[row].value)
+	}
 }
 
 func (c *UnitConfigWidget) GetParameters() map[string]string {
