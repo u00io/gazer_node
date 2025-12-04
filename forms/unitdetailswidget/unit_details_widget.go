@@ -49,6 +49,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelHeader.AddWidgetOnGrid(btnSaveConfig, 0, 1)
 
 	btnTranslateOn := ui.NewButton("Translate On")
+	btnTranslateOn.SetSize(100, 30)
 	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
 		if c.unitId != "" {
 			system.Instance.SetUnitTranslate(c.unitId, true)
@@ -62,6 +63,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 			system.Instance.SetUnitTranslate(c.unitId, false)
 		}
 	})
+	c.panelHeader.AddWidgetOnGrid(btnTranslateOff, 0, 3)
 
 	c.panelHeader.AddWidgetOnGrid(ui.NewHSpacer(), 0, 5)
 

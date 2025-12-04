@@ -58,6 +58,11 @@ func (c *System) Stop() {
 func (c *System) StartUnit(unitId string) {
 	for _, unit := range c.units {
 		if unit.GetId() == unitId {
+			unitConfig := config.UnitById(unitId)
+			if unitConfig == nil {
+				return
+			}
+			unit.SetConfig(*unitConfig)
 			unit.Start()
 			return
 		}
@@ -119,6 +124,9 @@ func (c *System) thWork() {
 
 func (c *System) SendValues() {
 	for _, unit := range c.units {
+		if unit.GetConfig().Translate == false {
+			continue
+		}
 		value := unit.GetValue("/")
 		if value != "" {
 			var items []ItemToSet
