@@ -1,12 +1,19 @@
 package system
 
+type UnitStateDataItem struct {
+	Key   string
+	Name  string
+	Value string
+	UOM   string
+}
+
 type UnitState struct {
 	Id string
 
 	UnitType            string
 	UnitTypeDisplayName string
 
-	Value string
+	Values []UnitStateDataItem
 }
 
 type State struct {

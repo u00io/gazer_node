@@ -11,32 +11,34 @@ import (
 )
 
 type Config struct {
-	Units []*ConfigUnit
+	Units []*ConfigUnit `json:"units"`
 }
 
 type ConfigUnit struct {
-	Id         string
-	Type       string
-	PrivateKey string
-	PublicKey  string
-	Parameters map[string]string
+	Id         string            `json:"id"`
+	Type       string            `json:"type"`
+	PrivateKey string            `json:"private_key"`
+	PublicKey  string            `json:"public_key"`
+	Parameters map[string]string `json:"parameters"`
+	Translate  bool              `json:"translate"`
+}
+
+func NewConfigUnit() *ConfigUnit {
+	var c ConfigUnit
+	c.Parameters = make(map[string]string)
+	return &c
 }
 
 var instance Config
 
-func AddUnit(unitType string, parameters map[string]string) string {
+func AddUnit(unitConfig *ConfigUnit) string {
 	key := utils.NewKey()
-
-	unit := &ConfigUnit{
-		Id:         generateId(),
-		Type:       unitType,
-		Parameters: parameters,
-		PrivateKey: key.GetPrivateKey(),
-		PublicKey:  key.GetPublicKey(),
-	}
-	instance.Units = append(instance.Units, unit)
+	unitConfig.Id = generateId()
+	unitConfig.PrivateKey = key.GetPrivateKey()
+	unitConfig.PublicKey = key.GetPublicKey()
+	instance.Units = append(instance.Units, unitConfig)
 	Save()
-	return unit.Id
+	return unitConfig.Id
 }
 
 func RemoveUnit(unitId string) {

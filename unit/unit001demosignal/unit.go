@@ -44,6 +44,6 @@ func (c *Unit01FileContent) Tick() {
 
 	demoData = strconv.FormatFloat(sinValue, 'f', 1, 64)
 
-	c.SetValue("value", demoData)
+	c.SetValue("/", demoData)
 	c.counter++
 }

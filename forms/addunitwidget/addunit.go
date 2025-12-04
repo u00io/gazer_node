@@ -3,6 +3,7 @@ package addunitwidget
 import (
 	"image/color"
 
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/forms/configwidget"
 	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
@@ -84,7 +85,10 @@ func NewAddPage() *AddPage {
 func (c *AddPage) AddUnit() {
 	if c.selectedUnitType != "" {
 		parameters := c.configWidget.GetParameters()
-		system.Instance.AddUnit(c.selectedUnitType, parameters)
+		unitConfig := config.NewConfigUnit()
+		unitConfig.Type = c.selectedUnitType
+		unitConfig.Parameters = parameters
+		system.Instance.AddUnit(unitConfig)
 	}
 }
 

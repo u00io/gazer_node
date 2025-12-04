@@ -41,7 +41,7 @@ func (c *System) Start() {
 			continue
 		}
 		unit.SetId(unitConfig.Id)
-		unit.SetConfig(unitConfig.Parameters)
+		unit.SetConfig(*unitConfig)
 		key := utils.NewKeyFromPrivate(unitConfig.PrivateKey)
 		unit.SetKey(key)
 		c.units = append(c.units, unit)
@@ -71,6 +71,19 @@ func (c *System) StopUnit(unitId string) {
 			return
 		}
 	}
+}
+
+func (c *System) SetUnitTranslate(unitId string, translate bool) {
+	configUnit := config.UnitById(unitId)
+	if configUnit == nil {
+		return
+	}
+	configUnit.Translate = translate
+	config.Save()
+
+	Instance.EmitEvent("config_changed")
+	Instance.StopUnit(unitId)
+	Instance.StartUnit(unitId)
 }
 
 func (c *System) EmitEvent(event string) {
@@ -106,7 +119,7 @@ func (c *System) thWork() {
 
 func (c *System) SendValues() {
 	for _, unit := range c.units {
-		value := unit.GetValue("value")
+		value := unit.GetValue("/")
 		if value != "" {
 			var items []ItemToSet
 			items = append(items, ItemToSet{
@@ -131,34 +144,38 @@ func (c *System) GetState() State {
 			typeDisplayName = record.TypeDisplayName
 		}
 
+		values := make([]UnitStateDataItem, 0)
+		for k, v := range unit.GetValues() {
+			values = append(values, UnitStateDataItem{
+				Key:   k,
+				Name:  k,
+				Value: v,
+				UOM:   "",
+			})
+		}
+
 		unitState := UnitState{
 			Id:                  unit.GetId(),
 			UnitType:            unit.GetType(),
 			UnitTypeDisplayName: typeDisplayName,
-			Value:               unit.GetValue("value"),
+			Values:              values,
 		}
 		state.Units = append(state.Units, unitState)
 	}
 	return state
 }
 
-func (c *System) AddUnit(unitType string, parameters map[string]string) {
-	id := config.AddUnit(unitType, parameters)
+func (c *System) AddUnit(unitConfig *config.ConfigUnit) {
+	id := config.AddUnit(unitConfig)
 
-	unitConfig := config.UnitById(id)
-	if unitConfig == nil {
-		logger.Println("System::AddUnit", "Cannot find added unit in config with id", id)
-		return
-	}
-
-	unit := createUnitByType(unitType)
+	unit := createUnitByType(unitConfig.Type)
 	if unit == nil {
-		logger.Println("System::AddUnit", "Cannot create unit of type", unitType)
+		logger.Println("System::AddUnit", "Cannot create unit of type", unitConfig.Type)
 		return
 	}
 	unit.SetId(id)
 	unit.SetKey(utils.NewKeyFromPrivate(unitConfig.PrivateKey))
-	unit.SetConfig(parameters)
+	unit.SetConfig(*unitConfig)
 	c.units = append(c.units, unit)
 	unit.Start()
 }
@@ -178,7 +195,7 @@ func (c *System) RemoveUnit(unitId string) {
 func (c *System) GetUnitDefaultItemValue(unitId string) string {
 	for _, unit := range c.units {
 		if unit.GetId() == unitId {
-			return unit.GetValue("value")
+			return unit.GetValue("/")
 		}
 	}
 	return ""

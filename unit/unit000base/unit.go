@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/utils"
 	"github.com/u00io/gomisc/logger"
 )
@@ -17,7 +18,7 @@ type Unit struct {
 	tp      string
 	started bool
 	stoping bool
-	config  map[string]string
+	config  *config.ConfigUnit
 	values  map[string]string
 	iUnit   IUnit
 }
@@ -32,8 +33,8 @@ type IUnit interface {
 	GetKey() *utils.Key
 	SetKey(key *utils.Key)
 
-	SetConfig(config map[string]string)
-	GetConfig() map[string]string
+	SetConfig(config config.ConfigUnit)
+	GetConfig() config.ConfigUnit
 
 	GetParameterBool(key string, defaultValue bool) bool
 	GetParameterInt64(key string, defaultValue int64) int64
@@ -47,13 +48,16 @@ type IUnit interface {
 
 	GetType() string
 	GetValue(key string) string
+	GetValues() map[string]string
 	SetValue(key, value string)
 	Tick()
 }
 
 func (c *Unit) Init(iUnit IUnit) {
-	c.config = make(map[string]string)
 	c.values = make(map[string]string)
+	c.config = config.NewConfigUnit()
+	c.config.Type = c.GetType()
+	c.config.Parameters = make(map[string]string)
 	c.iUnit = iUnit
 }
 
@@ -93,16 +97,16 @@ func (c *Unit) GetType() string {
 	return c.tp
 }
 
-func (c *Unit) SetConfig(config map[string]string) {
+func (c *Unit) SetConfig(config config.ConfigUnit) {
 	c.mtx.Lock()
-	c.config = config
+	c.config = &config
 	c.mtx.Unlock()
 }
 
-func (c *Unit) GetConfig() map[string]string {
+func (c *Unit) GetConfig() config.ConfigUnit {
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
-	return c.config
+	return *c.config
 }
 
 func (c *Unit) GetParameterBool(key string, defaultValue bool) bool {
@@ -134,7 +138,7 @@ func (c *Unit) GetParameterFloat64(key string, defaultValue float64) float64 {
 
 func (c *Unit) GetParameterString(key string, defaultValue string) string {
 	c.mtx.Lock()
-	value, exists := c.config[key]
+	value, exists := c.config.Parameters[key]
 	c.mtx.Unlock()
 	if !exists {
 		return defaultValue
@@ -156,7 +160,7 @@ func (c *Unit) SetParameterFloat64(key string, value float64) {
 
 func (c *Unit) SetParameterString(key string, value string) {
 	c.mtx.Lock()
-	c.config[key] = value
+	c.config.Parameters[key] = value
 	c.mtx.Unlock()
 }
 
@@ -168,6 +172,16 @@ func (c *Unit) GetValue(key string) string {
 		return ""
 	}
 	return value
+}
+
+func (c *Unit) GetValues() map[string]string {
+	c.mtx.Lock()
+	defer c.mtx.Unlock()
+	result := make(map[string]string)
+	for k, v := range c.values {
+		result[k] = v
+	}
+	return result
 }
 
 func (c *Unit) SetValue(key, value string) {

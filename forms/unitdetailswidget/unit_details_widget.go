@@ -48,6 +48,21 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	})
 	c.panelHeader.AddWidgetOnGrid(btnSaveConfig, 0, 1)
 
+	btnTranslateOn := ui.NewButton("Translate On")
+	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.SetUnitTranslate(c.unitId, true)
+		}
+	})
+	c.panelHeader.AddWidgetOnGrid(btnTranslateOn, 0, 2)
+
+	btnTranslateOff := ui.NewButton("Translate Off")
+	btnTranslateOff.SetOnButtonClick(func(btn *ui.Button) {
+		if c.unitId != "" {
+			system.Instance.SetUnitTranslate(c.unitId, false)
+		}
+	})
+
 	c.panelHeader.AddWidgetOnGrid(ui.NewHSpacer(), 0, 5)
 
 	c.panelButtons = ui.NewPanel()
@@ -88,12 +103,19 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.lvDataItems = ui.NewTable()
 	c.lvDataItems.SetXExpandable(true)
 	c.lvDataItems.SetYExpandable(true)
+	c.lvDataItems.SetColumnCount(4)
+	c.lvDataItems.SetColumnName(0, "Key")
+	c.lvDataItems.SetColumnName(1, "Name")
+	c.lvDataItems.SetColumnName(2, "Value")
+	c.lvDataItems.SetColumnName(3, "UOM")
 	c.panelContent.AddWidgetOnGrid(c.lvDataItems, 0, 1)
 
 	c.SetPanelPadding(1)
 	c.SetBackgroundColor(c.BackgroundColorAccent1())
 
 	c.SetUnitId("")
+
+	c.AddTimer(500, c.updateState)
 
 	return &c
 }
@@ -138,4 +160,34 @@ func (c *UnitDetailsWidget) GetPublicKey() string {
 		return ""
 	}
 	return unitConfig.PublicKey
+}
+
+func (c *UnitDetailsWidget) updateState() {
+	c.updateUnitValues()
+}
+
+func (c *UnitDetailsWidget) updateUnitValues() {
+	state := system.Instance.GetState()
+	var currentUnit system.UnitState
+	found := false
+	for _, unit := range state.Units {
+		if unit.Id == c.unitId {
+			currentUnit = unit
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		c.lvDataItems.SetRowCount(0)
+		return
+	}
+
+	c.lvDataItems.SetRowCount(len(currentUnit.Values))
+	for rowIndex, item := range currentUnit.Values {
+		c.lvDataItems.SetCellText2(rowIndex, 0, item.Key)
+		c.lvDataItems.SetCellText2(rowIndex, 1, item.Name)
+		c.lvDataItems.SetCellText2(rowIndex, 2, item.Value)
+		c.lvDataItems.SetCellText2(rowIndex, 3, item.UOM)
+	}
 }

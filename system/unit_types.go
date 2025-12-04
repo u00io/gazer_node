@@ -106,7 +106,10 @@ func (r *UnitsRegistry) GetUnitTypeDefaultParameters(unitType string) map[string
 	result := make(map[string]string)
 	if record, exists := r.UnitTypes[unitType]; exists {
 		unit := record.Constructor()
-		result = unit.GetConfig()
+		config := unit.GetConfig()
+		for k, v := range config.Parameters {
+			result[k] = v
+		}
 	}
 	result["000_name_str"] = unitType + " Instance"
 	return result
