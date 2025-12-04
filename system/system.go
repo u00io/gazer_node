@@ -1,6 +1,7 @@
 package system
 
 import (
+	"sort"
 	"sync"
 	"time"
 
@@ -163,6 +164,10 @@ func (c *System) GetState() State {
 				UOM:   v.Uom,
 			})
 		}
+
+		sort.Slice(values, func(i, j int) bool {
+			return values[i].Key < values[j].Key
+		})
 
 		unitState := UnitState{
 			Id:                  unit.GetId(),

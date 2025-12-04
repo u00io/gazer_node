@@ -5,6 +5,7 @@ import (
 
 	"github.com/u00io/gazer_node/unit/unit000base"
 	"github.com/u00io/gazer_node/unit/unit001demosignal"
+	"github.com/u00io/gazer_node/unit/unit104memory"
 )
 
 type UnitCategory struct {
@@ -45,11 +46,11 @@ func init() {
 	// Computer units
 	/*Registry.RegisterUnitType("unit101networkadapters", "Network Adapters", unit02currenttime.New, "Computer")
 	Registry.RegisterUnitType("unit102process", "Process", unit02currenttime.New, "Computer")
-	Registry.RegisterUnitType("unit103storage", "Storage", unit02currenttime.New, "Computer")
-	Registry.RegisterUnitType("unit104memory", "Memory", unit02currenttime.New, "Computer")
+	Registry.RegisterUnitType("unit103storage", "Storage", unit02currenttime.New, "Computer")*/
+	Registry.RegisterUnitType("unit104memory", "Memory", unit104memory.New, "Computer")
 
 	// File units
-	Registry.RegisterUnitType("unit201filesize", "File Size", unit02currenttime.New, "Files")
+	/*Registry.RegisterUnitType("unit201filesize", "File Size", unit02currenttime.New, "Files")
 	Registry.RegisterUnitType("unit202filecontent", "File Content", unit02currenttime.New, "Files")
 	Registry.RegisterUnitType("unit203filetail", "File Tail", unit02currenttime.New, "Files")
 

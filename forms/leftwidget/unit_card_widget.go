@@ -64,6 +64,7 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	c.AddWidgetOnGrid(c.lblUnitId, 1, 0)
 
 	c.lblValue = ui.NewLabel("123")
+	c.lblValue.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblValue.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
 			c.Click()
