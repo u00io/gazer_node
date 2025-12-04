@@ -9,7 +9,7 @@ import (
 	"github.com/u00io/nuiforms/ui"
 )
 
-type AddPage struct {
+type AddUnitWidget struct {
 	ui.Widget
 
 	selectedCategory string
@@ -25,8 +25,8 @@ type AddPage struct {
 	configWidget *configwidget.UnitConfigWidget
 }
 
-func NewAddPage() *AddPage {
-	var c AddPage
+func NewAddUnitWidget() *AddUnitWidget {
+	var c AddUnitWidget
 	c.InitWidget()
 	c.SetXExpandable(true)
 	c.SetYExpandable(true)
@@ -82,7 +82,7 @@ func NewAddPage() *AddPage {
 	return &c
 }
 
-func (c *AddPage) AddUnit() {
+func (c *AddUnitWidget) AddUnit() {
 	if c.selectedUnitType != "" {
 		parameters := c.configWidget.GetParameters()
 		unitConfig := config.NewConfigUnit()
@@ -92,7 +92,7 @@ func (c *AddPage) AddUnit() {
 	}
 }
 
-func (c *AddPage) SelectCategory(category string) {
+func (c *AddUnitWidget) SelectCategory(category string) {
 	c.selectedCategory = category
 	for _, widget := range c.panelCategories.Widgets() {
 		if catWidget, ok := widget.(*CategoryWidget); ok {
@@ -102,7 +102,7 @@ func (c *AddPage) SelectCategory(category string) {
 	c.loadUnitTypes()
 }
 
-func (c *AddPage) SelectUnitType(unitType string) {
+func (c *AddUnitWidget) SelectUnitType(unitType string) {
 	c.selectedUnitType = unitType
 	for _, widget := range c.panelUnitTypes.Widgets() {
 		if unitWidget, ok := widget.(*UnitTypeWidget); ok {
@@ -113,7 +113,7 @@ func (c *AddPage) SelectUnitType(unitType string) {
 	c.configWidget.SetUnitType(unitType, system.Registry.GetUnitTypeDefaultParameters(unitType))
 }
 
-func (c *AddPage) loadCategories() {
+func (c *AddUnitWidget) loadCategories() {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 	ui.MainForm.LayoutingBlockPush()
@@ -138,7 +138,7 @@ func (c *AddPage) loadCategories() {
 	//c.panelCategories.AddWidgetOnGrid(ui.NewVSpacer(), 0, c.panelCategories.NextGridY())
 }
 
-func (c *AddPage) loadUnitTypes() {
+func (c *AddUnitWidget) loadUnitTypes() {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 	ui.MainForm.LayoutingBlockPush()

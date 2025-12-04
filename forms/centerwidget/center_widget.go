@@ -77,9 +77,9 @@ func (c *CenterWidget) SetContent(typeOfContent string, id string) {
 
 	if typeOfContent == "addunit" {
 		c.panelContent.RemoveAllWidgets()
-		addPageWidget := addunitwidget.NewAddPage()
-		c.panelContent.AddWidgetOnGrid(addPageWidget, 0, 0)
-		addPageWidget.SetXExpandable(true)
-		addPageWidget.SetYExpandable(true)
+		addUnitWidget := addunitwidget.NewAddUnitWidget()
+		c.panelContent.AddWidgetOnGrid(addUnitWidget, 0, 0)
+		addUnitWidget.SetXExpandable(true)
+		addUnitWidget.SetYExpandable(true)
 	}
 }
