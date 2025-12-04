@@ -4,6 +4,7 @@ import (
 	"image/color"
 
 	"github.com/u00io/gazer_node/config"
+	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nui/nuikey"
 	"github.com/u00io/nui/nuimouse"
 	"github.com/u00io/nuiforms/ui"
@@ -21,6 +22,7 @@ type UnitCardWidget struct {
 
 	lblCategory *ui.Label
 	lblUnitId   *ui.Label
+	lblValue    *ui.Label
 }
 
 func NewUnitCardWidget(categoryName string, categoryDisplayName string, id string) *UnitCardWidget {
@@ -66,6 +68,15 @@ func NewUnitCardWidget(categoryName string, categoryDisplayName string, id strin
 	})
 	c.AddWidgetOnGrid(c.lblUnitId, 1, 0)
 
+	c.lblValue = ui.NewLabel("123")
+	c.lblValue.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
+		if button == nuimouse.MouseButtonLeft {
+			c.Click()
+		}
+		return true
+	})
+	c.AddWidgetOnGrid(c.lblValue, 2, 0)
+
 	c.SetYExpandable(false)
 	c.SetMinWidth(300)
 	c.SetMinHeight(120)
@@ -107,4 +118,5 @@ func (c *UnitCardWidget) IsSelected() bool {
 }
 
 func (c *UnitCardWidget) UpdateData() {
+	c.lblValue.SetText(system.Instance.GetUnitDefaultItemValue(c.id))
 }

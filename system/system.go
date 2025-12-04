@@ -137,3 +137,12 @@ func (c *System) RemoveUnit(unitId string) {
 		}
 	}
 }
+
+func (c *System) GetUnitDefaultItemValue(unitId string) string {
+	for _, unit := range c.units {
+		if unit.GetId() == unitId {
+			return unit.GetValue("value")
+		}
+	}
+	return ""
+}
