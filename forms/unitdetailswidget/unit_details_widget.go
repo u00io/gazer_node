@@ -37,7 +37,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelHeader.SetBackgroundColor(c.BackgroundColorAccent2())
 	c.AddWidgetOnGrid(c.panelHeader, 0, 0)
 
-	c.lblUnitName = ui.NewLabel("Unit Details")
+	c.lblUnitName = ui.NewLabel("----------")
 	c.panelHeader.AddWidgetOnGrid(c.lblUnitName, 0, 0)
 
 	btnRemove := ui.NewButton("Remove")
@@ -50,10 +50,26 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 
 	c.panelHeader.AddWidgetOnGrid(ui.NewHSpacer(), 0, 5)
 
+	panelSeparator := ui.NewPanel()
+	panelSeparator.SetAutoFillBackground(true)
+	panelSeparator.SetBackgroundColor(c.BackgroundColorAccent1())
+	panelSeparator.SetMinHeight(1)
+	panelSeparator.SetMaxHeight(1)
+	panelSeparator.SetYExpandable(false)
+	panelSeparator.SetXExpandable(true)
+	c.AddWidgetOnGrid(panelSeparator, 1, 0)
+
+	panelMargin := ui.NewPanel()
+	panelMargin.SetMinHeight(20)
+	panelMargin.SetMaxHeight(20)
+	panelMargin.SetYExpandable(false)
+	panelMargin.SetXExpandable(true)
+	c.AddWidgetOnGrid(panelMargin, 2, 0)
+
 	c.panelButtons = ui.NewPanel()
 	c.panelButtons.SetYExpandable(false)
 	c.panelButtons.SetBackgroundColor(c.BackgroundColorAccent1())
-	c.AddWidgetOnGrid(c.panelButtons, 1, 0)
+	c.AddWidgetOnGrid(c.panelButtons, 3, 0)
 
 	c.txtUrl = ui.NewTextBox()
 	c.txtUrl.SetReadOnly(true)
@@ -76,7 +92,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelContent = ui.NewPanel()
 	c.panelContent.SetXExpandable(true)
 	c.panelContent.SetYExpandable(true)
-	c.AddWidgetOnGrid(c.panelContent, 2, 0)
+	c.AddWidgetOnGrid(c.panelContent, 4, 0)
 
 	panelConfig := ui.NewPanel()
 	panelConfig.SetXExpandable(false)
