@@ -1,6 +1,8 @@
 package unitdetailswidget
 
 import (
+	"image/color"
+
 	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/forms/configwidget"
 	"github.com/u00io/gazer_node/system"
@@ -143,6 +145,11 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	panelUnitStateButtons.SetYExpandable(false)
 	panelUnitState.AddWidgetOnGrid(panelUnitStateButtons, 0, 0)
 
+	c.lblTranslateStatus = ui.NewLabel("---")
+	panelUnitStateButtons.AddWidgetOnGrid(c.lblTranslateStatus, 0, 0)
+
+	panelUnitStateButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
+
 	btnTranslateOn := ui.NewButton("Tr On")
 	btnTranslateOn.SetSize(100, 30)
 	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
@@ -150,7 +157,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 			system.Instance.SetUnitTranslate(c.unitId, true)
 		}
 	})
-	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOn, 0, 0)
+	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOn, 0, 2)
 
 	btnTranslateOff := ui.NewButton("Tr Off")
 	btnTranslateOff.SetOnButtonClick(func(btn *ui.Button) {
@@ -158,27 +165,18 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 			system.Instance.SetUnitTranslate(c.unitId, false)
 		}
 	})
-	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOff, 0, 1)
-
-	c.lblTranslateStatus = ui.NewLabel("---")
-	c.lblTranslateStatus.SetMinWidth(100)
-	c.lblTranslateStatus.SetMaxWidth(100)
-	panelUnitStateButtons.AddWidgetOnGrid(c.lblTranslateStatus, 0, 2)
-
-	panelUnitStateButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 10)
+	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOff, 0, 3)
 
 	c.lvDataItems = ui.NewTable()
 	c.lvDataItems.SetXExpandable(true)
 	c.lvDataItems.SetYExpandable(true)
 	c.lvDataItems.SetColumnCount(4)
-	c.lvDataItems.SetColumnName(0, "Key")
-	c.lvDataItems.SetColumnWidth(0, 100)
-	c.lvDataItems.SetColumnName(1, "Name")
+	c.lvDataItems.SetColumnName(0, "Name")
+	c.lvDataItems.SetColumnWidth(0, 150)
+	c.lvDataItems.SetColumnName(1, "Value")
 	c.lvDataItems.SetColumnWidth(1, 150)
-	c.lvDataItems.SetColumnName(2, "Value")
-	c.lvDataItems.SetColumnWidth(2, 150)
-	c.lvDataItems.SetColumnName(3, "UOM")
-	c.lvDataItems.SetColumnWidth(3, 100)
+	c.lvDataItems.SetColumnName(2, "UOM")
+	c.lvDataItems.SetColumnWidth(2, 100)
 	panelUnitState.AddWidgetOnGrid(c.lvDataItems, 1, 0)
 
 	c.SetPanelPadding(1)
@@ -262,19 +260,20 @@ func (c *UnitDetailsWidget) updateUnitValues() {
 		return
 	}
 
-	translationStatus := "Off"
 	if currentUnit.Config.Translate {
-		translationStatus = "On"
+		c.lblTranslateStatus.SetText("Translation status: Online")
+		c.lblTranslateStatus.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 0, A: 255})
+	} else {
+		c.lblTranslateStatus.SetText("Translation status: Offline")
+		c.lblTranslateStatus.SetForegroundColor(color.RGBA{R: 200, G: 100, B: 0, A: 255})
 	}
-	c.lblTranslateStatus.SetText("Tr: " + translationStatus)
 
 	c.lblUnitName.SetText(currentUnit.Config.GetParameterString("0000_00_name_str", currentUnit.Config.Type))
 
 	c.lvDataItems.SetRowCount(len(currentUnit.Values))
 	for rowIndex, item := range currentUnit.Values {
-		c.lvDataItems.SetCellText2(rowIndex, 0, item.Key)
-		c.lvDataItems.SetCellText2(rowIndex, 1, item.Name)
-		c.lvDataItems.SetCellText2(rowIndex, 2, item.Value)
-		c.lvDataItems.SetCellText2(rowIndex, 3, item.UOM)
+		c.lvDataItems.SetCellText2(rowIndex, 0, item.Name)
+		c.lvDataItems.SetCellText2(rowIndex, 1, item.Value)
+		c.lvDataItems.SetCellText2(rowIndex, 2, item.UOM)
 	}
 }

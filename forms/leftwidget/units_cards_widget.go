@@ -37,6 +37,8 @@ func NewUnitsCardsWidget() *UnitsCardsWidget {
 
 	c.AddTimer(500, c.timerUpdate)
 
+	c.loadedPagesCount = -1
+
 	return &c
 }
 
@@ -91,6 +93,12 @@ func (c *UnitsCardsWidget) loadPages() {
 	for _, w := range ws {
 		if pageWidget, ok := w.(*UnitCardWidget); ok {
 			pageWidget.UpdateData()
+		}
+	}
+
+	if !c.loadedFirstTime {
+		if c.loadedPagesCount == 0 {
+			c.SelectPage("addunit", "")
 		}
 	}
 

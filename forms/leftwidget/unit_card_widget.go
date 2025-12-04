@@ -32,6 +32,7 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	c.id = id
 
 	c.lblName = ui.NewLabel("")
+	c.lblName.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.lblName.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblName.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
@@ -46,14 +47,9 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	if unit != nil {
 		unitIdShort = unit.PublicKey
 	}
-	// input: 1234-------3240
-	// format: 0x1234...3240
-	if len(id) == 64 {
-		unitIdShort = "0x" + id[:4] + "..." + id[len(id)-4:]
-	}
 
 	c.lblUnitId = ui.NewLabel(unitIdShort)
-	c.lblUnitId.SetForegroundColor(color.RGBA{R: 150, G: 150, B: 250, A: 255})
+	c.lblUnitId.SetForegroundColor(color.RGBA{R: 100, G: 100, B: 100, A: 255})
 	c.lblUnitId.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblUnitId.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {

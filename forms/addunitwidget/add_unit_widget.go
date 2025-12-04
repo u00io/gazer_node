@@ -25,6 +25,8 @@ type AddUnitWidget struct {
 	panelConfigButtons  *ui.Panel
 	lblSelectedUnitType *ui.Label
 
+	lblTitleUnitTypes *ui.Label
+
 	btnAdd *ui.Button
 
 	configWidget *configwidget.UnitConfigWidget
@@ -46,7 +48,7 @@ func NewAddUnitWidget() *AddUnitWidget {
 
 	panelSeparator := ui.NewPanel()
 	panelSeparator.SetAutoFillBackground(true)
-	panelSeparator.SetBackgroundColor(color.RGBA{R: 100, G: 100, B: 100, A: 255})
+	panelSeparator.SetBackgroundColor(color.RGBA{R: 50, G: 50, B: 50, A: 255})
 	panelSeparator.SetMinHeight(1)
 	panelSeparator.SetMaxHeight(1)
 	panelSeparator.SetYExpandable(false)
@@ -56,8 +58,8 @@ func NewAddUnitWidget() *AddUnitWidget {
 	panelSpace := ui.NewPanel()
 	panelSpace.SetYExpandable(false)
 	panelSpace.SetXExpandable(true)
-	panelSpace.SetMinHeight(20)
-	panelSpace.SetMaxHeight(20)
+	panelSpace.SetMinHeight(10)
+	panelSpace.SetMaxHeight(10)
 	c.panelTop.AddWidgetOnGrid(panelSpace, 2, 0)
 
 	c.panelCenter = ui.NewPanel()
@@ -66,6 +68,8 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.AddWidgetOnGrid(c.panelCenter, 1, 0)
 
 	lblTitleCategories := ui.NewLabel("Categories")
+	lblTitleCategories.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
+	lblTitleCategories.SetUnderline(true)
 	c.panelCenter.AddWidgetOnGrid(lblTitleCategories, 0, 0)
 
 	c.panelCategories = ui.NewPanel()
@@ -76,19 +80,22 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.panelCategories.SetAllowScroll(true, true)
 	c.panelCenter.AddWidgetOnGrid(c.panelCategories, 1, 0)
 
-	lblTitleUnitTypes := ui.NewLabel("Unit Types")
-	c.panelCenter.AddWidgetOnGrid(lblTitleUnitTypes, 0, 1)
+	c.lblTitleUnitTypes = ui.NewLabel("Unit Types")
+	c.lblTitleUnitTypes.SetUnderline(true)
+	c.lblTitleUnitTypes.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
+	c.panelCenter.AddWidgetOnGrid(c.lblTitleUnitTypes, 0, 1)
 
 	c.panelUnitTypes = ui.NewPanel()
 	c.panelUnitTypes.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
-	c.panelUnitTypes.SetMinWidth(200)
-	c.panelUnitTypes.SetMaxWidth(200)
+	c.panelUnitTypes.SetMinWidth(300)
+	c.panelUnitTypes.SetMaxWidth(300)
 	c.panelUnitTypes.SetAllowScroll(true, true)
 	c.panelUnitTypes.SetYExpandable(true)
 	c.panelCenter.AddWidgetOnGrid(c.panelUnitTypes, 1, 1)
 
-	lblTitleConfig := ui.NewLabel("Configuration")
-	c.panelCenter.AddWidgetOnGrid(lblTitleConfig, 0, 2)
+	c.lblSelectedUnitType = ui.NewLabel("Selected Unit Type: None")
+	c.lblSelectedUnitType.SetUnderline(true)
+	c.panelCenter.AddWidgetOnGrid(c.lblSelectedUnitType, 0, 2)
 
 	c.panelConfig = ui.NewPanel()
 	c.panelConfig.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
@@ -97,37 +104,45 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.configWidget = configwidget.NewUnitConfigWidget()
 	c.configWidget.SetMinWidth(300)
 
-	c.panelConfig.AddWidgetOnGrid(c.configWidget, 1, 0)
+	lblTitleConfig := ui.NewLabel("Configuration")
+	c.panelConfig.AddWidgetOnGrid(lblTitleConfig, 1, 0)
+
+	c.configWidget.SetMaxHeight(400)
+
+	c.panelConfig.AddWidgetOnGrid(c.configWidget, 2, 0)
+
 	c.panelCenter.AddWidgetOnGrid(c.panelConfig, 1, 2)
 
 	c.panelConfigButtons = ui.NewPanel()
 	c.panelConfigButtons.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
 	c.panelConfigButtons.SetAllowScroll(false, false)
 	c.panelConfigButtons.SetYExpandable(false)
-
-	c.lblSelectedUnitType = ui.NewLabel("Selected Unit Type: None")
-	c.panelConfigButtons.AddWidgetOnGrid(c.lblSelectedUnitType, 0, 0)
-
-	c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
-
-	c.btnAdd = ui.NewButton("+")
-	c.btnAdd.SetFontSize(48)
+	//c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
+	c.btnAdd = ui.NewButton("+ CREATE UNIT")
+	c.btnAdd.SetFontSize(36)
 	c.btnAdd.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.btnAdd.SetEnabled(false)
-	c.btnAdd.SetMinSize(64, 64)
-	c.btnAdd.SetMaxSize(64, 64)
+	c.btnAdd.SetMinWidth(350)
+	c.btnAdd.SetMinHeight(64)
+	c.btnAdd.SetMaxHeight(64)
 	c.btnAdd.SetOnButtonClick(func(btn *ui.Button) {
 		c.AddUnit()
 	})
-	c.panelConfigButtons.AddWidgetOnGrid(c.btnAdd, 0, 2)
+	c.panelConfigButtons.AddWidgetOnGrid(c.btnAdd, 0, 0)
+	c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
 
-	c.panelConfig.AddWidgetOnGrid(c.panelConfigButtons, 0, 0)
+	c.panelConfig.AddWidgetOnGrid(c.panelConfigButtons, 3, 0)
 
 	c.loadCategories()
 	c.loadUnitTypes()
 
 	c.SelectCategory("All")
-	c.SelectUnitType("")
+
+	if len(config.Units()) == 0 {
+		c.SelectUnitType("unit001demosignal")
+	} else {
+		c.SelectUnitType("")
+	}
 
 	return &c
 }
@@ -149,6 +164,7 @@ func (c *AddUnitWidget) SelectCategory(category string) {
 			catWidget.SetSelected(catWidget.categoryName == category)
 		}
 	}
+	c.lblTitleUnitTypes.SetText("Unit Types: " + category)
 	c.loadUnitTypes()
 }
 
@@ -176,9 +192,11 @@ func (c *AddUnitWidget) SelectUnitType(unitType string) {
 	if unitType != "" {
 		c.btnAdd.SetEnabled(true)
 		c.panelConfig.SetEnabled(true)
+		c.lblSelectedUnitType.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	} else {
 		c.btnAdd.SetEnabled(false)
 		c.panelConfig.SetEnabled(false)
+		c.lblSelectedUnitType.SetForegroundColor(color.RGBA{R: 200, G: 200, B: 200, A: 255})
 	}
 }
 
