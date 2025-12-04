@@ -23,6 +23,8 @@ func New() unit000base.IUnit {
 }
 
 func (c *Unit01FileContent) Tick() {
+	offset := c.GetParameterInt64("offset_num", 0)
+
 	demoData := ""
 	//demoData += time.Now().Format("15:04:05")
 	//rnd := rand.Int31() % 100
@@ -33,6 +35,9 @@ func (c *Unit01FileContent) Tick() {
 	sinValue += math.Sin(float64(time.Now().Unix()%10)/10.0*2.0*math.Pi)*20 + 20
 	// add some noise
 	sinValue += (rand.Float64() - 0.5) * 10
+
+	// add offset
+	sinValue += float64(offset)
 
 	demoData = strconv.FormatFloat(sinValue, 'f', 1, 64)
 

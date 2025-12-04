@@ -1,6 +1,8 @@
 package unit000base
 
 import (
+	"fmt"
+	"strconv"
 	"sync"
 	"time"
 
@@ -31,6 +33,12 @@ type IUnit interface {
 	SetKey(key *utils.Key)
 
 	SetConfig(config map[string]string)
+
+	GetParameterBool(key string, defaultValue bool) bool
+	GetParameterInt64(key string, defaultValue int64) int64
+	GetParameterFloat64(key string, defaultValue float64) float64
+	GetParameterString(key string, defaultValue string) string
+
 	GetType() string
 	GetValue(key string) string
 	SetValue(key, value string)
@@ -83,6 +91,43 @@ func (c *Unit) SetConfig(config map[string]string) {
 	c.mtx.Lock()
 	c.config = config
 	c.mtx.Unlock()
+}
+
+func (c *Unit) GetParameterBool(key string, defaultValue bool) bool {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseBool(valueStr)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *Unit) GetParameterInt64(key string, defaultValue int64) int64 {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseInt(valueStr, 10, 64)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *Unit) GetParameterFloat64(key string, defaultValue float64) float64 {
+	valueStr := c.GetParameterString(key, fmt.Sprint(defaultValue))
+	value, err := strconv.ParseFloat(valueStr, 64)
+	if err != nil {
+		return defaultValue
+	}
+	return value
+}
+
+func (c *Unit) GetParameterString(key string, defaultValue string) string {
+	c.mtx.Lock()
+	value, exists := c.config[key]
+	c.mtx.Unlock()
+	if !exists {
+		return defaultValue
+	}
+	return value
 }
 
 func (c *Unit) GetValue(key string) string {

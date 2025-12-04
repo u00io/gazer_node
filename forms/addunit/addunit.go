@@ -19,6 +19,8 @@ type AddPage struct {
 	panelConfig         *ui.Panel
 	panelConfigButtons  *ui.Panel
 	lblSelectedUnitType *ui.Label
+
+	configWidget *UnitConfigWidget
 }
 
 func NewAddPage() *AddPage {
@@ -47,9 +49,10 @@ func NewAddPage() *AddPage {
 	c.panelConfig.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
 	//c.panelConfig.SetAllowScroll(true, true)
 	c.panelConfig.SetYExpandable(true)
-	configWidget := NewUnitConfig()
-	configWidget.SetMinWidth(300)
-	c.panelConfig.AddWidgetOnGrid(configWidget, 1, 0)
+	c.configWidget = NewUnitConfigWidget()
+	c.configWidget.SetMinWidth(300)
+
+	c.panelConfig.AddWidgetOnGrid(c.configWidget, 1, 0)
 	c.AddWidgetOnGrid(c.panelConfig, 0, 2)
 
 	c.panelConfigButtons = ui.NewPanel()
@@ -58,7 +61,7 @@ func NewAddPage() *AddPage {
 	c.panelConfigButtons.SetYExpandable(false)
 	btnAdd := ui.NewButton("Add")
 	btnAdd.SetOnButtonClick(func(btn *ui.Button) {
-		system.Instance.AddUnit(c.selectedUnitType, nil)
+		c.AddUnit()
 	})
 	c.panelConfigButtons.AddWidgetOnGrid(btnAdd, 0, 0)
 	c.lblSelectedUnitType = ui.NewLabel("Selected Unit Type: None")
@@ -75,6 +78,13 @@ func NewAddPage() *AddPage {
 	c.SelectUnitType("")
 
 	return &c
+}
+
+func (c *AddPage) AddUnit() {
+	if c.selectedUnitType != "" {
+		parameters := c.configWidget.GetParameters()
+		system.Instance.AddUnit(c.selectedUnitType, parameters)
+	}
 }
 
 func (c *AddPage) SelectCategory(category string) {
@@ -95,7 +105,7 @@ func (c *AddPage) SelectUnitType(unitType string) {
 		}
 	}
 	c.lblSelectedUnitType.SetText(unitType)
-	// load editor
+	c.configWidget.SetUnitType(unitType)
 }
 
 func (c *AddPage) loadCategories() {
