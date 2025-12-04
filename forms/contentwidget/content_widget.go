@@ -1,6 +1,7 @@
 package contentwidget
 
 import (
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/forms/addunit"
 	"github.com/u00io/gazer_node/forms/unitdetailswidget"
 	"github.com/u00io/nuiforms/ui"
@@ -9,6 +10,9 @@ import (
 type ContentWidget struct {
 	ui.Widget
 	panelContent *ui.Panel
+
+	typeOfContent string
+	id            string
 }
 
 func NewContentWidget() *ContentWidget {
@@ -26,12 +30,36 @@ func NewContentWidget() *ContentWidget {
 	return &c
 }
 
+func (c *ContentWidget) HandleSystemEvent(event string) {
+	if event == "unit_removed" {
+		// Check if current content exists in config
+		if c.typeOfContent == "page" {
+			unitsFromConfig := config.Units()
+			found := false
+			for _, uc := range unitsFromConfig {
+				if uc.Id == c.id {
+					found = true
+					break
+				}
+			}
+			if !found {
+				// Removed, clear content
+				c.SetContent("", "")
+			}
+		}
+
+	}
+}
+
 func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 	ui.MainForm.UpdateBlockPush()
 	defer ui.MainForm.UpdateBlockPop()
 
 	ui.MainForm.LayoutingBlockPush()
 	defer ui.MainForm.LayoutingBlockPop()
+
+	c.typeOfContent = typeOfContent
+	c.id = id
 
 	if typeOfContent == "" {
 		c.panelContent.RemoveAllWidgets()
@@ -45,9 +73,6 @@ func (c *ContentWidget) SetContent(typeOfContent string, id string) {
 		c.panelContent.AddWidgetOnGrid(contentWidget, 0, 0)
 		contentWidget.SetXExpandable(true)
 		contentWidget.SetYExpandable(true)
-		contentWidget.OnRemoved = func() {
-			c.SetContent("", "")
-		}
 	}
 
 	if typeOfContent == "addunit" {

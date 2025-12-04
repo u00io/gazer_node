@@ -64,7 +64,23 @@ func NewMainForm() *MainForm {
 	c.bottomPanel.AddWidgetOnGrid(ui.NewLabel("Powered by Gazer.Cloud"), 0, 0)
 	c.AddWidgetOnGrid(c.bottomPanel, 2, 0)
 
+	c.AddTimer(50, c.timerUpdate)
+
 	return &c
+}
+
+func (c *MainForm) timerUpdate() {
+	systemEvents := system.Instance.GetAndClearEvents()
+	if len(systemEvents) > 0 {
+		for _, ev := range systemEvents {
+			c.HandleSystemEvent(ev)
+		}
+	}
+}
+
+func (c *MainForm) HandleSystemEvent(event string) {
+	c.pagesWidget.HandleSystemEvent(event)
+	c.contentWidget.HandleSystemEvent(event)
 }
 
 func Run() {

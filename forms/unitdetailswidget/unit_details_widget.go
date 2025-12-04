@@ -19,8 +19,6 @@ type UnitDetailsWidget struct {
 	txtUrl *ui.TextBox
 
 	contentWidget *UnitContentWidget
-
-	OnRemoved func()
 }
 
 func NewUnitDetailsWidget() *UnitDetailsWidget {
@@ -37,9 +35,6 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	btnRemove.SetOnButtonClick(func(btn *ui.Button) {
 		if c.unitId != "" {
 			system.Instance.RemoveUnit(c.unitId)
-			if c.OnRemoved != nil {
-				c.OnRemoved()
-			}
 		}
 	})
 	c.panelHeader.AddWidgetOnGrid(btnRemove, 0, 0)

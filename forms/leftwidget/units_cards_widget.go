@@ -1,7 +1,7 @@
 package leftwidget
 
 import (
-	"github.com/u00io/gazer_node/system"
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -39,6 +39,12 @@ func NewUnitsCardsWidget() *UnitsCardsWidget {
 	return &c
 }
 
+func (c *UnitsCardsWidget) HandleSystemEvent(event string) {
+	if event == "unit_removed" {
+		c.loadPages()
+	}
+}
+
 func (c *UnitsCardsWidget) SetOnPageSelected(callback func(tp string, unitId string)) {
 	c.onPageSelected = callback
 }
@@ -49,8 +55,10 @@ func (c *UnitsCardsWidget) loadPages() {
 	ui.MainForm.LayoutingBlockPush()
 	defer ui.MainForm.LayoutingBlockPop()
 
-	state := system.Instance.GetState()
-	if len(state.Units) != c.loadedPagesCount || !c.loadedFirstTime {
+	unitsFromConfig := config.Units()
+
+	//state := system.Instance.GetState()
+	if len(unitsFromConfig) != c.loadedPagesCount || !c.loadedFirstTime {
 		c.panelPages.RemoveAllWidgets()
 
 		addPageWidget := NewAppPageWidget("Add Unit", "Add Unit", "")
@@ -59,14 +67,14 @@ func (c *UnitsCardsWidget) loadPages() {
 		}
 		c.panelPages.AddWidgetOnGrid(addPageWidget, 0, 0)
 
-		for _, page := range state.Units {
-			pageWidget := NewUnitCardWidget(page.UnitType, page.UnitTypeDisplayName, page.Id)
+		for _, unit := range unitsFromConfig {
+			pageWidget := NewUnitCardWidget(unit.Type, unit.Type, unit.Id)
 			pageWidget.OnClick = func(unitId string) {
 				c.SelectPage("page", unitId)
 			}
 			c.panelPages.AddWidgetOnGrid(pageWidget, c.panelPages.NextGridRow(), 0)
 		}
-		c.loadedPagesCount = len(state.Units)
+		c.loadedPagesCount = len(unitsFromConfig)
 	}
 
 	ws := c.panelPages.Widgets()

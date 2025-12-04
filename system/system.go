@@ -1,6 +1,7 @@
 package system
 
 import (
+	"sync"
 	"time"
 
 	"github.com/u00io/gazer_node/config"
@@ -10,9 +11,12 @@ import (
 )
 
 type System struct {
+	mtx    sync.Mutex
 	client *U00
 
 	units []unit000base.IUnit
+
+	events []string
 }
 
 var Instance *System
@@ -49,6 +53,20 @@ func (c *System) Start() {
 }
 
 func (c *System) Stop() {
+}
+
+func (c *System) EmitEvent(event string) {
+	c.mtx.Lock()
+	c.events = append(c.events, event)
+	c.mtx.Unlock()
+}
+
+func (c *System) GetAndClearEvents() []string {
+	c.mtx.Lock()
+	events := c.events
+	c.events = make([]string, 0)
+	c.mtx.Unlock()
+	return events
 }
 
 func (c *System) startAllUnits() {
@@ -133,6 +151,7 @@ func (c *System) RemoveUnit(unitId string) {
 		if unit.GetId() == unitId {
 			unit.Stop()
 			c.units = append(c.units[:i], c.units[i+1:]...)
+			c.EmitEvent("unit_removed")
 			return
 		}
 	}
