@@ -16,6 +16,9 @@ type AddUnitWidget struct {
 	selectedUnitType string
 	// nameFilter       string
 
+	panelTop    *ui.Panel
+	panelCenter *ui.Panel
+
 	panelCategories     *ui.Panel
 	panelUnitTypes      *ui.Panel
 	panelConfig         *ui.Panel
@@ -31,13 +34,48 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.SetXExpandable(true)
 	c.SetYExpandable(true)
 
+	c.panelTop = ui.NewPanel()
+	c.panelTop.SetYExpandable(false)
+	c.panelTop.SetXExpandable(true)
+	c.AddWidgetOnGrid(c.panelTop, 0, 0)
+
+	lblHeader := ui.NewLabel("Add New Unit")
+	c.panelTop.AddWidgetOnGrid(lblHeader, 0, 0)
+
+	panelSeparator := ui.NewPanel()
+	panelSeparator.SetAutoFillBackground(true)
+	panelSeparator.SetBackgroundColor(color.RGBA{R: 100, G: 100, B: 100, A: 255})
+	panelSeparator.SetMinHeight(1)
+	panelSeparator.SetMaxHeight(1)
+	panelSeparator.SetYExpandable(false)
+	panelSeparator.SetXExpandable(true)
+	c.panelTop.AddWidgetOnGrid(panelSeparator, 1, 0)
+
+	panelSpace := ui.NewPanel()
+	panelSpace.SetYExpandable(false)
+	panelSpace.SetXExpandable(true)
+	panelSpace.SetMinHeight(20)
+	panelSpace.SetMaxHeight(20)
+	c.panelTop.AddWidgetOnGrid(panelSpace, 2, 0)
+
+	c.panelCenter = ui.NewPanel()
+	c.panelCenter.SetXExpandable(true)
+	c.panelCenter.SetYExpandable(true)
+	c.AddWidgetOnGrid(c.panelCenter, 1, 0)
+
+	lblTitleCategories := ui.NewLabel("Categories")
+	c.panelCenter.AddWidgetOnGrid(lblTitleCategories, 0, 0)
+
 	c.panelCategories = ui.NewPanel()
 	c.panelCategories.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
 	c.panelCategories.SetMinWidth(200)
 	c.panelCategories.SetMaxWidth(200)
 	c.panelCategories.SetYExpandable(true)
 	c.panelCategories.SetAllowScroll(true, true)
-	c.AddWidgetOnGrid(c.panelCategories, 0, 0)
+	c.panelCenter.AddWidgetOnGrid(c.panelCategories, 1, 0)
+
+	lblTitleUnitTypes := ui.NewLabel("Unit Types")
+	c.panelCenter.AddWidgetOnGrid(lblTitleUnitTypes, 0, 1)
 
 	c.panelUnitTypes = ui.NewPanel()
 	c.panelUnitTypes.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
@@ -45,7 +83,10 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.panelUnitTypes.SetMaxWidth(300)
 	c.panelUnitTypes.SetAllowScroll(true, true)
 	c.panelUnitTypes.SetYExpandable(true)
-	c.AddWidgetOnGrid(c.panelUnitTypes, 0, 1)
+	c.panelCenter.AddWidgetOnGrid(c.panelUnitTypes, 1, 1)
+
+	lblTitleConfig := ui.NewLabel("Configuration")
+	c.panelCenter.AddWidgetOnGrid(lblTitleConfig, 0, 2)
 
 	c.panelConfig = ui.NewPanel()
 	c.panelConfig.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
@@ -55,7 +96,7 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.configWidget.SetMinWidth(300)
 
 	c.panelConfig.AddWidgetOnGrid(c.configWidget, 1, 0)
-	c.AddWidgetOnGrid(c.panelConfig, 0, 2)
+	c.panelCenter.AddWidgetOnGrid(c.panelConfig, 1, 2)
 
 	c.panelConfigButtons = ui.NewPanel()
 	c.panelConfigButtons.SetBackgroundColor(color.RGBA{R: 20, G: 20, B: 20, A: 255})
