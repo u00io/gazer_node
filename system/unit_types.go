@@ -5,6 +5,7 @@ import (
 
 	"github.com/u00io/gazer_node/unit/unit000base"
 	"github.com/u00io/gazer_node/unit/unit001demosignal"
+	"github.com/u00io/gazer_node/unit/unit103storage"
 	"github.com/u00io/gazer_node/unit/unit104memory"
 )
 
@@ -45,8 +46,8 @@ func init() {
 
 	// Computer units
 	/*Registry.RegisterUnitType("unit101networkadapters", "Network Adapters", unit02currenttime.New, "Computer")
-	Registry.RegisterUnitType("unit102process", "Process", unit02currenttime.New, "Computer")
-	Registry.RegisterUnitType("unit103storage", "Storage", unit02currenttime.New, "Computer")*/
+	Registry.RegisterUnitType("unit102process", "Process", unit02currenttime.New, "Computer")*/
+	Registry.RegisterUnitType("unit103storage", "Storage", unit103storage.New, "Computer")
 	Registry.RegisterUnitType("unit104memory", "Memory", unit104memory.New, "Computer")
 
 	// File units
