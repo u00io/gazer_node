@@ -2,6 +2,7 @@ package leftwidget
 
 import (
 	"github.com/u00io/gazer_node/config"
+	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -39,9 +40,18 @@ func NewUnitsCardsWidget() *UnitsCardsWidget {
 	return &c
 }
 
-func (c *UnitsCardsWidget) HandleSystemEvent(event string) {
-	if event == "config_changed" {
+func (c *UnitsCardsWidget) HandleSystemEvent(event system.Event) {
+	if event.Name == "config_changed" {
 		c.loadPages()
+	}
+
+	if event.Name == "unit_added" {
+		c.loadPages()
+		c.SelectPage("page", event.Parameter)
+
+		ui.ShowQuestionMessageBox("Unit Added", "Open unit view for the new unit?", func() {
+			system.Instance.EmitEvent("need_open_unit_view_url", event.Parameter)
+		}, nil)
 	}
 }
 

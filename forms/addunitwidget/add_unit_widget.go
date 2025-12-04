@@ -110,10 +110,12 @@ func NewAddUnitWidget() *AddUnitWidget {
 
 	c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
 
-	c.btnAdd = ui.NewButton("ADD")
+	c.btnAdd = ui.NewButton("+")
+	c.btnAdd.SetFontSize(48)
+	c.btnAdd.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.btnAdd.SetEnabled(false)
-	c.btnAdd.SetMinSize(100, 100)
-	c.btnAdd.SetMaxSize(100, 100)
+	c.btnAdd.SetMinSize(64, 64)
+	c.btnAdd.SetMaxSize(64, 64)
 	c.btnAdd.SetOnButtonClick(func(btn *ui.Button) {
 		c.AddUnit()
 	})

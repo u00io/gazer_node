@@ -17,7 +17,12 @@ type System struct {
 
 	units []unit000base.IUnit
 
-	events []string
+	events []Event
+}
+
+type Event struct {
+	Name      string
+	Parameter string
 }
 
 var Instance *System
@@ -87,21 +92,21 @@ func (c *System) SetUnitTranslate(unitId string, translate bool) {
 	configUnit.Translate = translate
 	config.Save()
 
-	Instance.EmitEvent("config_changed")
+	Instance.EmitEvent("config_changed", "")
 	Instance.StopUnit(unitId)
 	Instance.StartUnit(unitId)
 }
 
-func (c *System) EmitEvent(event string) {
+func (c *System) EmitEvent(event string, parameter string) {
 	c.mtx.Lock()
-	c.events = append(c.events, event)
+	c.events = append(c.events, Event{Name: event, Parameter: parameter})
 	c.mtx.Unlock()
 }
 
-func (c *System) GetAndClearEvents() []string {
+func (c *System) GetAndClearEvents() []Event {
 	c.mtx.Lock()
 	events := c.events
-	c.events = make([]string, 0)
+	c.events = make([]Event, 0)
 	c.mtx.Unlock()
 	return events
 }
@@ -194,6 +199,9 @@ func (c *System) AddUnit(unitConfig *config.ConfigUnit) {
 	unit.SetConfig(*unitConfig)
 	c.units = append(c.units, unit)
 	unit.Start()
+
+	c.EmitEvent("config_changed", "")
+	c.EmitEvent("unit_added", id)
 }
 
 func (c *System) RemoveUnit(unitId string) {
@@ -202,7 +210,7 @@ func (c *System) RemoveUnit(unitId string) {
 		if unit.GetId() == unitId {
 			unit.Stop()
 			c.units = append(c.units[:i], c.units[i+1:]...)
-			c.EmitEvent("config_changed")
+			c.EmitEvent("config_changed", "")
 			return
 		}
 	}

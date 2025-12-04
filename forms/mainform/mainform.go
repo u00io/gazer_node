@@ -78,7 +78,7 @@ func (c *MainForm) timerUpdate() {
 	}
 }
 
-func (c *MainForm) HandleSystemEvent(event string) {
+func (c *MainForm) HandleSystemEvent(event system.Event) {
 	c.pagesWidget.HandleSystemEvent(event)
 	c.centerWidget.HandleSystemEvent(event)
 }

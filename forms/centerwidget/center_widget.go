@@ -4,6 +4,7 @@ import (
 	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/forms/addunitwidget"
 	"github.com/u00io/gazer_node/forms/unitdetailswidget"
+	"github.com/u00io/gazer_node/system"
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -30,8 +31,8 @@ func NewCenterWidget() *CenterWidget {
 	return &c
 }
 
-func (c *CenterWidget) HandleSystemEvent(event string) {
-	if event == "config_changed" {
+func (c *CenterWidget) HandleSystemEvent(event system.Event) {
+	if event.Name == "config_changed" {
 		// Check if current content exists in config
 		if c.typeOfContent == "page" {
 			unitsFromConfig := config.Units()
@@ -49,6 +50,13 @@ func (c *CenterWidget) HandleSystemEvent(event string) {
 		}
 
 	}
+
+	for _, widget := range c.panelContent.Widgets() {
+		if ew, ok := widget.(*unitdetailswidget.UnitDetailsWidget); ok {
+			ew.HandleSystemEvent(event)
+		}
+	}
+
 }
 
 func (c *CenterWidget) SetContent(typeOfContent string, id string) {

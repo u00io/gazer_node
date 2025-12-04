@@ -191,6 +191,14 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	return &c
 }
 
+func (c *UnitDetailsWidget) HandleSystemEvent(event system.Event) {
+	if event.Name == "need_open_unit_view_url" {
+		if event.Parameter == c.unitId {
+			utils.OpenURL(c.generateUrl(c.GetPublicKey()))
+		}
+	}
+}
+
 func (c *UnitDetailsWidget) SetUnitId(id string) {
 	c.unitId = id
 	if id == "" {
@@ -215,7 +223,7 @@ func (c *UnitDetailsWidget) saveConfig() {
 			unitFromConfig.Parameters[k] = v
 		}
 		config.Save()
-		system.Instance.EmitEvent("config_changed")
+		system.Instance.EmitEvent("config_changed", "")
 		system.Instance.StopUnit(c.unitId)
 		system.Instance.StartUnit(c.unitId)
 	}
