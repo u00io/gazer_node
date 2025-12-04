@@ -20,13 +20,14 @@ func New() unit000base.IUnit {
 	c.SetType("unit001demosignal")
 	c.Init(&c)
 
-	c.Config().SetParameterFloat64("100_offset_num", 0.0)
+	c.Config().SetParameterString("0000_00_name_str", "Demo Signal")
+	c.Config().SetParameterFloat64("0100_00_offset_num", 0.0)
 
 	return &c
 }
 
 func (c *Unit01FileContent) Tick() {
-	offset := c.Config().GetParameterFloat64("100_offset_num", 0.0)
+	offset := c.Config().GetParameterFloat64("0100_00_offset_num", 0.0)
 
 	demoData := ""
 	//demoData += time.Now().Format("15:04:05")

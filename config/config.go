@@ -28,6 +28,7 @@ type ConfigUnit struct {
 func NewConfigUnit() *ConfigUnit {
 	var c ConfigUnit
 	c.Parameters = make(map[string]string)
+	c.Translate = true
 	return &c
 }
 

@@ -1,8 +1,10 @@
 package configwidget
 
 import (
+	"fmt"
 	"sort"
 
+	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/nuiforms/ui"
 )
 
@@ -52,7 +54,10 @@ func (c *UnitConfigWidget) SetUnitType(unitType string, parameters map[string]st
 	c.lvItems.SetRowCount(len(items))
 
 	for row := 0; row < len(items); row++ {
-		c.lvItems.SetCellText2(row, 0, items[row].key)
+		key := items[row].key
+		propName := config.PropName(key)
+		c.lvItems.SetCellData2(row, 0, key)
+		c.lvItems.SetCellText2(row, 0, propName)
 		c.lvItems.SetCellText2(row, 1, items[row].value)
 	}
 }
@@ -60,7 +65,7 @@ func (c *UnitConfigWidget) SetUnitType(unitType string, parameters map[string]st
 func (c *UnitConfigWidget) GetParameters() map[string]string {
 	parameters := make(map[string]string)
 	for row := 0; row < c.lvItems.RowCount(); row++ {
-		key := c.lvItems.GetCellText2(row, 0)
+		key := fmt.Sprint(c.lvItems.GetCellData2(row, 0))
 		value := c.lvItems.GetCellText2(row, 1)
 		if key != "" {
 			parameters[key] = value

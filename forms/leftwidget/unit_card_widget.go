@@ -118,6 +118,6 @@ func (c *UnitCardWidget) UpdateData() {
 	if unitConfig == nil {
 		return
 	}
-	c.lblName.SetText(unitConfig.GetParameterString("001_name_str", unitConfig.Type))
+	c.lblName.SetText(unitConfig.GetParameterString("0000_00_name_str", unitConfig.Type))
 	c.lblValue.SetText(system.Instance.GetUnitDefaultItemValue(c.id))
 }

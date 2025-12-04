@@ -22,6 +22,8 @@ func New() unit000base.IUnit {
 	c.SetType("unit103storage")
 	c.Init(&c)
 
+	c.Config().SetParameterString("0000_00_name_str", "Storage")
+
 	return &c
 }
 

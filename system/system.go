@@ -129,7 +129,7 @@ func (c *System) SendValues() {
 			continue
 		}
 		values := unit.GetValues()
-		//name := unit.GetParameterString("001_name_str", unit.GetType())
+		//name := unit.GetParameterString("0000_00_name_str", unit.GetType())
 
 		for _, value := range values {
 			var items []ItemToSet

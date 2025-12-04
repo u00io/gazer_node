@@ -244,7 +244,7 @@ func (c *UnitDetailsWidget) updateUnitValues() {
 	}
 	c.lblTranslateStatus.SetText("Tr: " + translationStatus)
 
-	c.lblUnitName.SetText(currentUnit.Config.GetParameterString("001_name_str", currentUnit.Config.Type))
+	c.lblUnitName.SetText(currentUnit.Config.GetParameterString("0000_00_name_str", currentUnit.Config.Type))
 
 	c.lvDataItems.SetRowCount(len(currentUnit.Values))
 	for rowIndex, item := range currentUnit.Values {

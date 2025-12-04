@@ -18,6 +18,8 @@ func New() unit000base.IUnit {
 	c.SetType("unit104memory")
 	c.Init(&c)
 
+	c.Config().SetParameterString("0000_00_name_str", "Memory")
+
 	return &c
 }
 
