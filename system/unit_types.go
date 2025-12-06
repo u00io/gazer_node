@@ -9,6 +9,7 @@ import (
 	"github.com/u00io/gazer_node/unit/unit102process"
 	"github.com/u00io/gazer_node/unit/unit103storage"
 	"github.com/u00io/gazer_node/unit/unit104memory"
+	"github.com/u00io/gazer_node/unit/unit301serialportkeyvalue"
 )
 
 type UnitCategory struct {
@@ -56,10 +57,10 @@ func init() {
 	/*Registry.RegisterUnitType("unit201filesize", "File Size", unit02currenttime.New, "Files")
 	Registry.RegisterUnitType("unit202filecontent", "File Content", unit02currenttime.New, "Files")
 	Registry.RegisterUnitType("unit203filetail", "File Tail", unit02currenttime.New, "Files")
-
+	*/
 	// Serial Port units
-	Registry.RegisterUnitType("unit301serialportkeyvalue", "Serial Port Key=Value", unit02currenttime.New, "SerialPort")
-	Registry.RegisterUnitType("unit302serialportline", "Serial Port Lines", unit02currenttime.New, "SerialPort")
+	Registry.RegisterUnitType("unit301serialportkeyvalue", "Serial Port Key=Value", unit301serialportkeyvalue.New, "SerialPort")
+	/*Registry.RegisterUnitType("unit302serialportline", "Serial Port Lines", unit02currenttime.New, "SerialPort")
 
 	// HTTP units
 	Registry.RegisterUnitType("unit401httpvalue", "Http Get Value", unit02currenttime.New, "HTTP/Web")

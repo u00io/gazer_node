@@ -6,6 +6,7 @@ require (
 	github.com/kbinani/win v0.3.0
 	github.com/prometheus/procfs v0.19.2
 	github.com/shirou/gopsutil v3.21.11+incompatible
+	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	github.com/u00io/gomisc v0.0.1
 	github.com/u00io/nui v0.0.5
 	github.com/u00io/nuiforms v0.0.11

@@ -124,7 +124,7 @@ func (c *System) Test() {
 func (c *System) thWork() {
 	for {
 		c.SendValues()
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
 	}
 }
 

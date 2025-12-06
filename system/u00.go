@@ -52,9 +52,9 @@ func (c *U00) Write(apiKey string, items []ItemToSet) error {
 		}
 	}
 
-	for k, p := range parameters {
+	/*for k, p := range parameters {
 		logger.Println("Write parameter:", k, "=", p)
-	}
+	}*/
 
 	resp, err := c.httpClient.PostForm(GetServerURL()+"/set/"+apiKey, parameters)
 	if err != nil {
