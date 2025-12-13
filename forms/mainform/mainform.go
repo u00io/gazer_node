@@ -49,7 +49,7 @@ func NewMainForm() *MainForm {
 	separator := ui.NewPanel()
 	separator.SetMinWidth(6)
 	separator.SetAutoFillBackground(true)
-	separator.SetBackgroundColor(c.BackgroundColorAccent1())
+	separator.SetBackgroundColor(c.BackgroundColorWithAddElevation(5))
 	c.centerPanel.AddWidgetOnGrid(separator, 0, 1)
 
 	// Center widget

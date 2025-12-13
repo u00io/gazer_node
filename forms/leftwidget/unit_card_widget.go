@@ -32,7 +32,7 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	c.id = id
 
 	c.lblName = ui.NewLabel("")
-	c.lblName.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
+	//c.lblName.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.lblName.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblName.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
 		if button == nuimouse.MouseButtonLeft {
@@ -93,15 +93,9 @@ func (c *UnitCardWidget) Click() {
 func (c *UnitCardWidget) SetSelected(selected bool) {
 	c.selected = selected
 	if selected {
-		backColor := c.BackgroundColorAccent2()
-		c.SetBackgroundColor(backColor)
-		c.lblName.SetBackgroundColor(backColor)
-		c.lblUnitId.SetBackgroundColor(backColor)
+		c.SetRole("primary")
 	} else {
-		backColor := c.BackgroundColorAccent1()
-		c.SetBackgroundColor(backColor)
-		c.lblName.SetBackgroundColor(backColor)
-		c.lblUnitId.SetBackgroundColor(backColor)
+		c.SetRole("")
 	}
 }
 

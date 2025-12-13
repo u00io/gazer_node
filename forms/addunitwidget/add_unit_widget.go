@@ -119,13 +119,13 @@ func NewAddUnitWidget() *AddUnitWidget {
 	c.panelConfigButtons.SetYExpandable(false)
 	//c.panelConfigButtons.AddWidgetOnGrid(ui.NewHSpacer(), 0, 1)
 	c.btnAdd = ui.NewButton("+ CREATE UNIT")
-	c.btnAdd.SetFontSize(36)
+	//c.btnAdd.SetFontSize(36)
 	c.btnAdd.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.btnAdd.SetEnabled(false)
 	c.btnAdd.SetMinWidth(350)
 	c.btnAdd.SetMinHeight(64)
 	c.btnAdd.SetMaxHeight(64)
-	c.btnAdd.SetOnButtonClick(func(btn *ui.Button) {
+	c.btnAdd.SetOnButtonClick(func() {
 		c.AddUnit()
 	})
 	c.panelConfigButtons.AddWidgetOnGrid(c.btnAdd, 0, 0)

@@ -85,15 +85,9 @@ func (c *AppPageWidget) Click() {
 func (c *AppPageWidget) SetSelected(selected bool) {
 	c.selected = selected
 	if selected {
-		backColor := c.BackgroundColorAccent2()
-		c.SetBackgroundColor(backColor)
-		c.lblCategory.SetBackgroundColor(backColor)
-		c.lblUnitId.SetBackgroundColor(backColor)
+		c.SetRole("primary")
 	} else {
-		backColor := c.BackgroundColorAccent1()
-		c.SetBackgroundColor(backColor)
-		c.lblCategory.SetBackgroundColor(backColor)
-		c.lblUnitId.SetBackgroundColor(backColor)
+		c.SetRole("")
 	}
 }
 

@@ -26,7 +26,7 @@ func NewCenterWidget() *CenterWidget {
 	c.AddWidgetOnGrid(c.panelContent, 1, 0)
 
 	c.SetPanelPadding(1)
-	c.SetBackgroundColor(c.BackgroundColorAccent1())
+	c.SetElevation(1)
 
 	return &c
 }

@@ -36,14 +36,15 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	// Header
 	c.panelHeader = ui.NewPanel()
 	c.panelHeader.SetYExpandable(false)
-	c.panelHeader.SetBackgroundColor(c.BackgroundColorAccent2())
+	c.panelHeader.SetElevation(2)
+	//c.panelHeader.SetBackgroundColor(c.BackgroundColorAccent2())
 	c.AddWidgetOnGrid(c.panelHeader, 0, 0)
 
 	c.lblUnitName = ui.NewLabel("----------")
 	c.panelHeader.AddWidgetOnGrid(c.lblUnitName, 0, 0)
 
 	btnRemove := ui.NewButton("Remove")
-	btnRemove.SetOnButtonClick(func(btn *ui.Button) {
+	btnRemove.SetOnButtonClick(func() {
 		if c.unitId != "" {
 			system.Instance.RemoveUnit(c.unitId)
 		}
@@ -54,7 +55,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 
 	panelSeparator := ui.NewPanel()
 	panelSeparator.SetAutoFillBackground(true)
-	panelSeparator.SetBackgroundColor(c.BackgroundColorAccent1())
+	panelSeparator.SetElevation(5)
 	panelSeparator.SetMinHeight(1)
 	panelSeparator.SetMaxHeight(1)
 	panelSeparator.SetYExpandable(false)
@@ -70,7 +71,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 
 	c.panelButtons = ui.NewPanel()
 	c.panelButtons.SetYExpandable(false)
-	c.panelButtons.SetBackgroundColor(c.BackgroundColorAccent1())
+	// c.panelButtons.SetBackgroundColor(c.BackgroundColorAccent1())
 	c.AddWidgetOnGrid(c.panelButtons, 3, 0)
 
 	c.txtUrl = ui.NewTextBox()
@@ -80,13 +81,13 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	c.panelButtons.AddWidgetOnGrid(c.txtUrl, 0, 1)
 
 	btnCopy := ui.NewButton("Copy")
-	btnCopy.SetOnButtonClick(func(btn *ui.Button) {
+	btnCopy.SetOnButtonClick(func() {
 		ui.ClipboardSetText(c.generateUrl(c.GetPublicKey()))
 	})
 	c.panelButtons.AddWidgetOnGrid(btnCopy, 0, 2)
 
 	btnOpen := ui.NewButton("Open")
-	btnOpen.SetOnButtonClick(func(btn *ui.Button) {
+	btnOpen.SetOnButtonClick(func() {
 		utils.OpenURL(c.generateUrl(c.GetPublicKey()))
 	})
 	c.panelButtons.AddWidgetOnGrid(btnOpen, 0, 3)
@@ -108,13 +109,13 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	panelConfig.AddWidgetOnGrid(panelConfigButtons, 0, 0)
 
 	btnSaveConfig := ui.NewButton("Save")
-	btnSaveConfig.SetOnButtonClick(func(btn *ui.Button) {
+	btnSaveConfig.SetOnButtonClick(func() {
 		c.saveConfig()
 	})
 	panelConfigButtons.AddWidgetOnGrid(btnSaveConfig, 0, 0)
 
 	btnUnitStart := ui.NewButton("Start")
-	btnUnitStart.SetOnButtonClick(func(btn *ui.Button) {
+	btnUnitStart.SetOnButtonClick(func() {
 		if c.unitId != "" {
 			system.Instance.StartUnit(c.unitId)
 		}
@@ -122,7 +123,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	panelConfigButtons.AddWidgetOnGrid(btnUnitStart, 0, 1)
 
 	btnUnitStop := ui.NewButton("Stop")
-	btnUnitStop.SetOnButtonClick(func(btn *ui.Button) {
+	btnUnitStop.SetOnButtonClick(func() {
 		if c.unitId != "" {
 			system.Instance.StopUnit(c.unitId)
 		}
@@ -152,7 +153,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 
 	btnTranslateOn := ui.NewButton("Tr On")
 	btnTranslateOn.SetSize(100, 30)
-	btnTranslateOn.SetOnButtonClick(func(btn *ui.Button) {
+	btnTranslateOn.SetOnButtonClick(func() {
 		if c.unitId != "" {
 			system.Instance.SetUnitTranslate(c.unitId, true)
 		}
@@ -160,7 +161,7 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	panelUnitStateButtons.AddWidgetOnGrid(btnTranslateOn, 0, 2)
 
 	btnTranslateOff := ui.NewButton("Tr Off")
-	btnTranslateOff.SetOnButtonClick(func(btn *ui.Button) {
+	btnTranslateOff.SetOnButtonClick(func() {
 		if c.unitId != "" {
 			system.Instance.SetUnitTranslate(c.unitId, false)
 		}
@@ -180,7 +181,8 @@ func NewUnitDetailsWidget() *UnitDetailsWidget {
 	panelUnitState.AddWidgetOnGrid(c.lvDataItems, 1, 0)
 
 	c.SetPanelPadding(1)
-	c.SetBackgroundColor(c.BackgroundColorAccent1())
+	c.SetElevation(1)
+	// c.SetBackgroundColor(c.BackgroundColorAccent1())
 
 	c.SetUnitId("")
 
