@@ -1,7 +1,7 @@
 package leftwidget
 
 import (
-	"image/color"
+	"fmt"
 
 	"github.com/u00io/gazer_node/config"
 	"github.com/u00io/gazer_node/system"
@@ -16,10 +16,6 @@ type UnitCardWidget struct {
 
 	selected bool
 	OnClick  func(clickedCategory string)
-
-	lblName   *ui.Label
-	lblUnitId *ui.Label
-	lblValue  *ui.Label
 }
 
 func NewUnitCardWidget(id string) *UnitCardWidget {
@@ -27,11 +23,26 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	c.InitWidget()
 
 	c.SetPanelPadding(1)
+	c.SetElevation(1)
 	c.SetAutoFillBackground(true)
+	c.SetLayout(`
+	<row padding="0" onclick="Click" cursor="pointer">
+		<frame padding="1" role="primary"  cursor="pointer"/>
+		<column padding="0"  cursor="pointer">
+			<label id="lblName" text="Unit"  onclick="Click"  cursor="pointer"/>
+			<label id="lblUnitId" onclick="Click" cursor="pointer"/>
+			<label id="lblValue" onclick="Click"  cursor="pointer"/>
+			<hspacer  cursor="pointer"/>
+		</column>
+	</row>
+	`, &c, nil)
 
 	c.id = id
 
-	c.lblName = ui.NewLabel("")
+	lblName := c.FindWidgetByName("lblName").(*ui.Label)
+	lblName.SetText(id)
+
+	/*c.lblName = ui.NewLabel("")
 	//c.lblName.SetForegroundColor(color.RGBA{R: 0, G: 200, B: 200, A: 255})
 	c.lblName.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.lblName.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
@@ -68,6 +79,7 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 		return true
 	})
 	c.AddWidgetOnGrid(c.lblValue, 2, 0)
+	*/
 
 	c.SetYExpandable(false)
 	c.SetMinWidth(300)
@@ -76,6 +88,7 @@ func NewUnitCardWidget(id string) *UnitCardWidget {
 	c.SetSelected(false)
 	c.SetMouseCursor(nuimouse.MouseCursorPointer)
 	c.SetOnMouseDown(func(button nuimouse.MouseButton, x int, y int, mods nuikey.KeyModifiers) bool {
+		fmt.Println("UnitCardWidget clicked:", c.id)
 		if button == nuimouse.MouseButtonLeft {
 			c.Click()
 		}
@@ -94,6 +107,7 @@ func (c *UnitCardWidget) SetSelected(selected bool) {
 	c.selected = selected
 	if selected {
 		c.SetRole("primary")
+
 	} else {
 		c.SetRole("")
 	}
@@ -108,6 +122,11 @@ func (c *UnitCardWidget) UpdateData() {
 	if unitConfig == nil {
 		return
 	}
-	c.lblName.SetText(unitConfig.GetParameterString("0000_00_name_str", unitConfig.Type))
-	c.lblValue.SetText(system.Instance.GetUnitDefaultItemValue(c.id))
+
+	lblName := c.FindWidgetByName("lblName").(*ui.Label)
+	lblUnitId := c.FindWidgetByName("lblUnitId").(*ui.Label)
+	lblValue := c.FindWidgetByName("lblValue").(*ui.Label)
+	lblName.SetText(unitConfig.GetParameterString("0000_00_name_str", unitConfig.Type))
+	lblUnitId.SetText(unitConfig.PublicKey)
+	lblValue.SetText(system.Instance.GetUnitDefaultItemValue(c.id))
 }
